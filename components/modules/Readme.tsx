@@ -7,6 +7,8 @@ import { featuredProjects, profile, projects } from "@/content";
 import { SHELL_USER } from "@/lib/commands";
 
 export function ReadmeModule() {
+  const github = profile.socials.find((s) => s.label === "github");
+
   return (
     <Document>
       <header className="anim-rise mb-10 sm:mb-14">
@@ -41,7 +43,24 @@ export function ReadmeModule() {
             Resume
           </CtaButton>
           <CtaButton href="/contact">Contact</CtaButton>
+          {github && (
+            <CtaButton href={github.href} external>
+              GitHub
+            </CtaButton>
+          )}
         </div>
+
+        <p className="text-ui text-faint mt-4 flex items-center gap-1.5">
+          <span aria-hidden>→</span>
+          Recruiting or hiring?{" "}
+          <Link
+            href="/recruiter"
+            className="text-muted hover:text-text decoration-line-strong hover:decoration-accent underline decoration-1 underline-offset-4 transition-colors duration-150"
+          >
+            Try the 30-second version
+          </Link>
+          .
+        </p>
       </header>
 
       <Section label="whoami">

@@ -126,6 +126,13 @@ export function CommandPalette() {
         openExternal(profile.resume);
       },
     },
+    {
+      id: "recruiter",
+      title: "Open recruiter mode",
+      hint: "30s",
+      keywords: ["recruiter", "quick view", "summary", "hire", "client", "fast"],
+      run: () => go("/recruiter"),
+    },
     ...profile.socials.map<Action>((social) => ({
       id: `social-${social.label}`,
       title: `Open ${SOCIAL_DISPLAY_NAME[social.label] ?? social.label}`,

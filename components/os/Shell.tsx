@@ -24,9 +24,16 @@ import { useOS } from "@/lib/store";
  * modules swaps only the document in the pane — the chrome, the terminal
  * session, and the open tabs all survive.
  */
+/** The one route that deliberately isn't part of the OS — see the early
+ *  return below. Kept out of `modules.ts` on purpose: registering it there
+ *  would give it a rail entry, a tab, and a terminal `open` target, which is
+ *  exactly the chrome recruiter mode exists to skip. */
+const RECRUITER_ROUTE = "/recruiter";
+
 export function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const isRecruiterMode = pathname === RECRUITER_ROUTE;
 
   const splitRoute = useOS((s) => s.splitRoute);
   const wide = useMediaQuery("(min-width: 1280px)");
@@ -49,6 +56,10 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
+      // None of this chrome exists to catch a shortcut for — recruiter mode
+      // has no rail, palette, or terminal for these bindings to reach.
+      if (isRecruiterMode) return;
+
       const os = useOS.getState();
       const mod = event.metaKey || event.ctrlKey;
       const typing = isTypingTarget(event.target);
@@ -124,7 +135,16 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [router]);
+  }, [router, isRecruiterMode]);
+
+  // No rail, no tabs, no terminal, no boot sequence — recruiter mode is a
+  // fast, separate surface, not another document inside this one. `body`
+  // still carries `overflow-hidden` from the root layout, so the page
+  // supplies its own scroll container the same way `Pane` does everywhere
+  // else in the OS.
+  if (isRecruiterMode) {
+    return <div className="h-full overflow-y-auto">{children}</div>;
+  }
 
   return (
     <div className="flex h-full flex-col">

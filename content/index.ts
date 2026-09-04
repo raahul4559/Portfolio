@@ -15,6 +15,19 @@ export { stack, stackItemCount } from "./stack";
 export { timeline } from "./timeline";
 
 /**
+ * The recruiter/quick-view page's skill chips — derived from the same honest
+ * ratings `skills.md` shows in full, not a separate curated list that could
+ * drift from them. Level 5s first, then 4s, capped at ten so it reads in one
+ * glance instead of restating the whole page.
+ */
+export const topSkills = stack
+  .flatMap((group) => group.items)
+  .filter((item) => item.level >= 4)
+  .sort((a, b) => b.level - a.level)
+  .slice(0, 10)
+  .map((item) => item.name);
+
+/**
  * Byte counts are derived from the actual content so `ls -l` reports something
  * true rather than a decorative number.
  */

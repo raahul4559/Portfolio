@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { profile } from "@/content";
 import { presenceFor, timeInZone } from "@/lib/clock";
 import { useMinuteTick, useMounted } from "@/lib/hooks";
@@ -77,6 +79,14 @@ export function SystemBar() {
         >
           {theme}
         </button>
+
+        <Link
+          href="/recruiter"
+          className="label text-faint hover:text-text hover:bg-surface-2 rounded-xs px-2 py-1.5 transition-colors duration-150"
+          aria-label="Recruiter mode — a 30-second summary for recruiters and clients"
+        >
+          recruiter
+        </Link>
 
         <button
           type="button"

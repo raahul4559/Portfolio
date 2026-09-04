@@ -135,6 +135,7 @@ const PRIMARY_HELP_ORDER = [
   "contact",
   "github",
   "resume",
+  "recruiter",
   "clear",
   "date",
   "status",
@@ -388,6 +389,16 @@ const COMMANDS: CommandSpec[] = [
     run: (_args, ctx) => {
       ctx.navigate(profile.resume);
       return [text(`opening ${profile.resume}`, "faint")];
+    },
+  },
+
+  {
+    name: "recruiter",
+    usage: "recruiter",
+    summary: "Fast summary — top projects, experience, contact",
+    run: (_args, ctx) => {
+      ctx.navigate("/recruiter");
+      return [text("opening /recruiter — the 30-second version", "faint")];
     },
   },
 
