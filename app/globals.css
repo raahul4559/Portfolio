@@ -286,6 +286,31 @@
   }
 }
 
+/* ─────────────────────────────────────────────────────────────
+   Boot overlay
+   Visibility is decided before paint, not by React: an inline script
+   stamps data-booted on <html> for a returning visitor, so nobody sees
+   the site flash behind a boot screen (or a boot screen they've already
+   watched). The <noscript> rule below guarantees content is never
+   trapped behind it.
+   ───────────────────────────────────────────────────────────── */
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: var(--bg);
+}
+
+html[data-booted="1"] .boot {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boot {
+    display: none;
+  }
+}
+
 /* Motion is a courtesy, not a requirement. */
 @media (prefers-reduced-motion: reduce) {
   *,

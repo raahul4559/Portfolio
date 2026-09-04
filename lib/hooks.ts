@@ -1,30 +1,39 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
+
+const noSubscription = () => () => {};
 
 /**
  * True only after the first client render. Used to gate anything that cannot
  * match the server output — live clocks, persisted layout, `navigator` reads.
+ *
+ * Built on useSyncExternalStore rather than a state+effect pair: there is
+ * nothing to subscribe to, but the hook still needs the client snapshot (true)
+ * to differ from the server snapshot (false), and this is React's sanctioned
+ * shape for that rather than a setState call inside an effect body.
  */
 export function useMounted(): boolean {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  return mounted;
+  return useSyncExternalStore(
+    noSubscription,
+    () => true,
+    () => false,
+  );
 }
 
 /** Media query as state, SSR-safe (always false on the server). */
 export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(false);
+  const subscribe = useCallback(
+    (onChange: () => void) => {
+      const mql = window.matchMedia(query);
+      mql.addEventListener("change", onChange);
+      return () => mql.removeEventListener("change", onChange);
+    },
+    [query],
+  );
+  const getSnapshot = useCallback(() => window.matchMedia(query).matches, [query]);
 
-  useEffect(() => {
-    const mql = window.matchMedia(query);
-    setMatches(mql.matches);
-    const onChange = (e: MediaQueryListEvent) => setMatches(e.matches);
-    mql.addEventListener("change", onChange);
-    return () => mql.removeEventListener("change", onChange);
-  }, [query]);
-
-  return matches;
+  return useSyncExternalStore(subscribe, getSnapshot, () => false);
 }
 
 export function useReducedMotion(): boolean {

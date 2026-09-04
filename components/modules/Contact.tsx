@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Document, DocumentHead, Section } from "@/components/ui/Document";
 import { ExternalLink } from "@/components/ui/bits";
 import { profile } from "@/content";
+import { copyText } from "@/lib/dom";
 
 export function ContactModule() {
   return (
@@ -60,12 +61,9 @@ function CopyField({ value, href }: { value: string; href: string }) {
   }, [copied]);
 
   const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(value);
-      setCopied(true);
-    } catch {
-      window.location.href = href;
-    }
+    const ok = await copyText(value);
+    if (ok) setCopied(true);
+    else window.location.assign(href);
   };
 
   return (

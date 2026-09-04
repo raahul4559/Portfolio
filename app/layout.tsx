@@ -3,6 +3,7 @@ import { Inter_Tight, JetBrains_Mono } from "next/font/google";
 
 import { Shell } from "@/components/os/Shell";
 import { profile } from "@/content";
+import { BOOT_KEY } from "@/lib/boot";
 import { THEME_KEY } from "@/lib/theme";
 
 import "./globals.css";
@@ -53,12 +54,15 @@ export const viewport: Viewport = {
 };
 
 /**
- * Applied before first paint so a returning visitor never sees the wrong
- * palette flash. Kept deliberately tiny and dependency-free.
+ * Runs before first paint. Sets the palette so a returning visitor never sees
+ * the wrong one flash, and marks the session as already-booted so the boot
+ * overlay is hidden by CSS rather than removed by React a frame later.
  */
-const themeScript = `(function(){try{var t=localStorage.getItem(${JSON.stringify(
+const bootScript = `(function(){var d=document.documentElement;try{var t=localStorage.getItem(${JSON.stringify(
   THEME_KEY,
-)});document.documentElement.dataset.theme=t==="paper"?"paper":"ink"}catch(e){document.documentElement.dataset.theme="ink"}})()`;
+)});d.dataset.theme=t==="paper"?"paper":"ink"}catch(e){d.dataset.theme="ink"}try{if(sessionStorage.getItem(${JSON.stringify(
+  BOOT_KEY,
+)}))d.dataset.booted="1"}catch(e){}})()`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
@@ -69,7 +73,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${ui.variable} ${data.variable} h-full`}
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script dangerouslySetInnerHTML={{ __html: bootScript }} />
+        {/* Without JS the boot overlay would never lift. Content first. */}
+        <noscript>
+          <style>{`.boot{display:none}`}</style>
+        </noscript>
       </head>
       <body className="h-full overflow-hidden">
         <Shell>{children}</Shell>

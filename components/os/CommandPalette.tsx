@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 import { nextSplitTarget } from "@/components/os/TabBar";
 import { profile, searchIndex } from "@/content";
+import { copyText, openExternal, openMailto } from "@/lib/dom";
 import { useOS } from "@/lib/store";
 
 interface Action {
@@ -29,10 +30,12 @@ export function CommandPalette() {
   const [copied, setCopied] = useState(false);
 
   // A palette that reopens with the last query is a palette that lies about
-  // what's on screen.
-  useEffect(() => {
-    if (!open) setSearch("");
-  }, [open]);
+  // what's on screen — reset it as part of the close itself, not as a
+  // separate effect reacting to `open`.
+  const handleOpenChange = (next: boolean) => {
+    setOpen(next);
+    if (!next) setSearch("");
+  };
 
   useEffect(() => {
     if (!copied) return;
@@ -97,11 +100,10 @@ export function CommandPalette() {
       title: copied ? "Email copied ✓" : "Copy email address",
       keywords: ["mail", "contact", "address", profile.email],
       run: async () => {
-        try {
-          await navigator.clipboard.writeText(profile.email);
-          setCopied(true);
-        } catch {
-          window.location.href = `mailto:${profile.email}`;
+        const ok = await copyText(profile.email);
+        if (ok) setCopied(true);
+        else {
+          openMailto(profile.email);
           setOpen(false);
         }
       },
@@ -112,7 +114,7 @@ export function CommandPalette() {
       keywords: ["cv", "pdf", "download", "hire"],
       run: () => {
         setOpen(false);
-        window.open(profile.resume, "_blank", "noopener");
+        openExternal(profile.resume);
       },
     },
     ...profile.socials.map<Action>((social) => ({
@@ -122,7 +124,7 @@ export function CommandPalette() {
       keywords: ["social", "profile", social.handle],
       run: () => {
         setOpen(false);
-        window.open(social.href, "_blank", "noopener");
+        openExternal(social.href);
       },
     })),
   ];
@@ -130,7 +132,7 @@ export function CommandPalette() {
   return (
     <Command.Dialog
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={handleOpenChange}
       label="Command palette"
       shouldFilter
       loop
