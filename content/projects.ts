@@ -38,6 +38,11 @@ export const projects: Project[] = [
       "Every project opens as a syntax-highlighted source file with a rendered preview underneath, not a static card",
       "Full keyboard control: ⌘K to search, ⌘J for a shell, arrow-key navigation everywhere",
     ],
+    architecture: [
+      "A single typed content layer (content/*.ts) is the only source of truth; the module rail, tab bar, command palette, terminal filesystem, and OG images are all pure functions of it — nothing is hand-duplicated across surfaces",
+      "The shell — rail, tabs, status bar — lives in a persistent App Router layout, so route changes only swap the document pane; the chrome itself never remounts",
+      "Zustand holds transient UI state (open tabs, terminal height, explorer expansion) with a hand-rolled localStorage sync; content stays server-rendered and typed, so there's no client-side data-fetching waterfall anywhere on the site",
+    ],
     challenges: [
       "Keeping the rail, the terminal, and the tab bar reading from one filesystem instead of three copies of the same data quietly drifting apart",
       "Shipping a boot sequence and a command palette without either one reading as a gimmick under a strict no-glow, no-gradient constraint",
@@ -46,6 +51,10 @@ export const projects: Project[] = [
       "100 Lighthouse accessibility score",
       "Four runtime UI dependencies total, and roughly 45KB of first-load JS",
       "The whole site skims in under twenty seconds through ordinary UI, or runs entirely from the keyboard",
+    ],
+    lessons: [
+      "Building the filesystem, rail, and terminal against one shared object graph from day one avoided an entire category of bugs — the three-copies-of-the-same-list drift never had a chance to happen",
+      "The boot sequence and command palette only stopped feeling like a gimmick once every stage became skippable and keyboard-first; delight that gets in the way of a returning visitor isn't delight",
     ],
     screenshots: [],
     links: {
@@ -79,6 +88,11 @@ export const projects: Project[] = [
       "Per-participant working hours enforced at booking time, not just displayed as a suggestion",
       "Hard failure on ambiguous local times instead of a best-effort guess",
     ],
+    architecture: [
+      "Bookings persist wall-clock time plus IANA zone as first-class columns in Postgres, not a UTC instant — the ambiguity a DST transition introduces is data the system can reason about, not noise already discarded",
+      "Recurrence expansion runs as a Temporal workflow rather than inline in the request path, so a slow or retried expansion can never time out a booking or leave it half-written",
+      "Redis backs short-lived locks around per-participant availability checks, keeping the hot booking path free of cross-service round trips",
+    ],
     challenges: [
       "The existing test suite ran entirely in UTC, so it had no way to even reproduce a DST bug, let alone catch one before release",
       "Recurrence expansion had to move out of the request path without breaking bookings that were already mid-flight",
@@ -88,6 +102,10 @@ export const projects: Project[] = [
       "31k events scheduled per month",
       "p99 booking latency cut to 180ms",
       "The differential test harness caught four latent bugs before users did",
+    ],
+    lessons: [
+      "A test suite that runs entirely in UTC can't catch a UTC-shaped bug — the differential harness against real tzdata should have existed before the first recurrence feature shipped, not six weeks after",
+      "Failing loudly on an ambiguous local time, instead of guessing, moved an entire class of support tickets from 'investigate in production' to 'caught at write time'",
     ],
     screenshots: [],
     links: {},
@@ -119,6 +137,11 @@ export const projects: Project[] = [
       "Every suggested index comes with the specific predicate that would use it",
       "Same core in the CLI and the web playground, so results never disagree",
     ],
+    architecture: [
+      "The plan-node classifier is a single Rust crate compiled two ways — natively for the CLI, to WASM for the web playground — so there is exactly one implementation of the ranking logic to disagree with itself",
+      "Findings are ranked by estimated time recovered, computed from the plan's own cost and row estimates, rather than by position in the tree — the output is a worklist ordered by payoff, not a diagram",
+      "Every suggested index is generated from the specific predicate that would use it, not inferred generically from the table shape",
+    ],
     challenges: [
       "A faithful rendering of a 40-node query plan is not an explanation — the hard part was ranking findings by actual recovered time, not tree position",
       "Keeping the Rust core and the WASM build byte-for-byte identical so the CLI and the web playground could never quietly disagree",
@@ -127,6 +150,10 @@ export const projects: Project[] = [
       "Cut a reporting endpoint from 4.2s to 310ms in one sitting",
       "1.4k GitHub stars",
       "One core compiled to both the CLI and the web playground",
+    ],
+    lessons: [
+      "Compiling one core to two targets instead of writing the web version 'quickly' in TypeScript is the reason the CLI and playground have never once disagreed on a plan",
+      "The heuristics are only as good as the workloads that shaped them — the honest next step is a corpus test across OLAP-shaped plans before trusting them there",
     ],
     screenshots: [],
     links: {
@@ -161,6 +188,11 @@ export const projects: Project[] = [
       "Presence and document changes on separate channels, so a dropped cursor update never risks a dropped edit",
       "Scales horizontally across socket servers with no sticky session routing",
     ],
+    architecture: [
+      "Cursor and selection updates coalesce into a 50ms tick and interpolate client-side, decoupling perceived smoothness from raw message rate",
+      "Presence (ephemeral, lossy-tolerant) and document operations (ordered, durable) run on separate channels with different delivery guarantees, so a dropped cursor update can never risk a dropped edit",
+      "Redis pub/sub fans room broadcasts out across socket servers, so horizontal scaling doesn't depend on sticky session routing",
+    ],
     challenges: [
       "The bug that mattered — dropped frames — only appeared above six concurrent editors, so it never showed up in manual testing",
       "Splitting presence from document ops meant two channels with genuinely different delivery guarantees, not just two topics on the same code path",
@@ -169,6 +201,10 @@ export const projects: Project[] = [
       "Message volume per room down from roughly 400/sec to 20/sec",
       "Steady 60fps with 40 simulated peers in a room",
       "p95 presence latency around 40ms",
+    ],
+    lessons: [
+      "The frame-drop bug only existed above six concurrent editors — a synthetic 40-peer load test now runs in CI on every change, because manual testing was structurally unable to catch it",
+      "Splitting presence from document ops the moment their guarantees diverged was cheaper than it looked; unwinding a shared channel later would not have been",
     ],
     screenshots: [],
     links: {},
@@ -197,6 +233,10 @@ export const projects: Project[] = [
       "Byte-identical output on every run — a formatting pass never shows up as a diff",
       "Preserves comments and intentional blank lines instead of discarding them",
     ],
+    architecture: [
+      "A lossless concrete syntax tree preserves comments and blank-line intent through a full parse/format round trip — an AST would have discarded exactly the information formatting needed to stay invisible",
+      "The entire configuration surface is zero options by design; there is no code path that produces two different valid outputs for the same input",
+    ],
     challenges: [
       "Idempotency had to be perfect — running the formatter twice needed to produce byte-identical output, or it would create the exact diff noise it was meant to remove",
       "Preserving comments and blank-line intent meant building a lossless CST instead of the AST a normal formatter would reach for",
@@ -205,6 +245,10 @@ export const projects: Project[] = [
       "Formats a 20k-line journal in under 8ms",
       "50k generated journals used as property-test cases for idempotency",
       "Zero formatting-only diffs since adopting it",
+    ],
+    lessons: [
+      "Property-testing idempotency against 50k generated journals caught edge cases a hand-written test suite never would have reached",
+      "Zero config was the most-requested feature and the correct architectural constraint at once — a rare case where the easy answer and the right answer were the same one",
     ],
     screenshots: [],
     links: {
@@ -238,6 +282,11 @@ export const projects: Project[] = [
       "A continuous reconciler that diffed both databases in production and alerted on drift",
       "Per-endpoint read cutover with rollback measured in seconds, not a maintenance window",
     ],
+    architecture: [
+      "Dual writes ran behind a feature flag scoped per table group, so the blast radius of enabling, verifying, or rolling back any single step stayed small and reversible",
+      "A continuous row-level reconciler diffed both databases in production on a schedule and alerted on drift, rather than trusting a single cutover moment to be correct",
+      "Read traffic cut over per endpoint with rollback measured in seconds, turning an eleven-hour maintenance-window problem into eleven weeks of individually reversible steps",
+    ],
     challenges: [
       "Nine years of undocumented schema behaviour — implicit casts, zero dates, collation quirks — that the application silently depended on",
       "Proving each step was safe enough to run in production without a maintenance window, since eleven hours of downtime was not on the table",
@@ -246,6 +295,10 @@ export const projects: Project[] = [
       "4 minutes of total downtime across an 11-week migration",
       "240GB and 1,100 tables moved off an end-of-life MySQL cluster",
       "19 real data-drift incidents caught by the reconciler before users saw them",
+    ],
+    lessons: [
+      "The reconciler — not the migration scripts — was the actual project; sizing the work as if the scripts were the hard part meant re-planning the timeline midway through",
+      "Turning nine years of undocumented behaviour into failing tests before porting each one made 'is this safe to ship' a question with evidence instead of a guess",
     ],
     screenshots: [],
     links: {},
@@ -276,6 +329,11 @@ export const projects: Project[] = [
       "Every claim in a digest links back to the exact source message",
       "Held to a 200-thread eval set — a regression there blocks the build",
     ],
+    architecture: [
+      "Each thread is scored for consensus before summarization; low-consensus threads return the open questions verbatim instead of a generated conclusion nobody asked for",
+      "Every claim in a digest carries a link back to the specific source message, making the output checkable rather than something the reader has to trust outright",
+      "A held-out set of 200 hand-labelled threads runs as a regression eval on every change — a drop against it blocks the build the same way a failing test would",
+    ],
     challenges: [
       "Summarizers are most confidently wrong on exactly the threads that matter most — the contested ones where the disagreement is the actual content",
       "Deciding when to say nothing: a low-consensus thread had to return open questions instead of a fabricated conclusion",
@@ -284,6 +342,10 @@ export const projects: Project[] = [
       "Cut daily thread-reading time substantially for the team that piloted it",
       "200 hand-labelled threads used as a regression eval set",
       "100% of claims in a digest link back to the source message",
+    ],
+    lessons: [
+      "Summarizers fail most confidently on exactly the threads where the disagreement is the content — treating 'say nothing' as a valid, correct output was the design decision that mattered most",
+      "Building the eval set before the second version of the summarizer, not after, made regressions visible immediately instead of showing up as a slow trust erosion nobody could point to",
     ],
     screenshots: [],
     links: {

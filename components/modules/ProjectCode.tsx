@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { CodeLines, Cm, Indent, Kw, Pn, Str, Ty, Var } from "@/components/ui/code";
 import type { Project } from "@/content/types";
 
 /**
@@ -13,34 +14,6 @@ import type { Project } from "@/content/types";
  * gutter stay correct no matter how long any one project's fields are —
  * nothing here is fixed-height.
  */
-
-function Kw({ children }: { children: ReactNode }) {
-  return <span className="text-syn-keyword">{children}</span>;
-}
-function Ty({ children }: { children: ReactNode }) {
-  return <span className="text-syn-type">{children}</span>;
-}
-function Var({ children }: { children: ReactNode }) {
-  return <span className="text-syn-variable">{children}</span>;
-}
-function Pn({ children }: { children: ReactNode }) {
-  return <span className="text-syn-punct">{children}</span>;
-}
-function Cm({ children }: { children: ReactNode }) {
-  return <span className="text-syn-comment italic">{children}</span>;
-}
-/** Quotes and colors a string value; only escapes the quote it introduces. */
-function Str({ value }: { value: string }) {
-  return (
-    <span className="text-syn-string">
-      &quot;{value.replaceAll('"', '\\"')}&quot;
-    </span>
-  );
-}
-
-function Indent({ depth, children }: { depth: 1 | 2; children: ReactNode }) {
-  return <span className={depth === 1 ? "pl-4" : "pl-8"}>{children}</span>;
-}
 
 function buildLines(project: Project): ReactNode[] {
   const lines: ReactNode[] = [];
@@ -161,20 +134,5 @@ function buildLines(project: Project): ReactNode[] {
 }
 
 export function ProjectCode({ project }: { project: Project }) {
-  const lines = buildLines(project);
-
-  return (
-    <code className="block">
-      {lines.map((line, i) => (
-        <div key={i} className="flex items-start">
-          <span className="ln text-faint select-none tnum w-7 shrink-0 pr-2 text-right">
-            {i + 1}
-          </span>
-          <span className="min-w-0 flex-1 break-words whitespace-pre-wrap">
-            {line}
-          </span>
-        </div>
-      ))}
-    </code>
-  );
+  return <CodeLines lines={buildLines(project)} />;
 }

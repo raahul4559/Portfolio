@@ -1,7 +1,7 @@
 "use client";
 
 import { ContactModule } from "@/components/modules/Contact";
-import { ProjectDetail } from "@/components/modules/ProjectDetail";
+import { ProjectRepo } from "@/components/modules/ProjectRepo";
 import { ProjectsModule } from "@/components/modules/Projects";
 import { ReadmeModule } from "@/components/modules/Readme";
 import { StackModule } from "@/components/modules/Stack";
@@ -25,7 +25,7 @@ export function ModuleView({ route }: { route: string }) {
 
   if (route.startsWith("/projects/")) {
     const project = getProject(route.slice("/projects/".length));
-    if (project) return <ProjectDetail project={project} />;
+    if (project) return <ProjectRepo project={project} />;
   }
 
   return (

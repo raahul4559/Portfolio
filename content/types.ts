@@ -49,10 +49,15 @@ export interface Project {
   technologies: string[];
   /** What the thing does, from a user's seat — not how it was built. */
   features: string[];
+  /** How it was actually built — the decisions, not a component diagram. */
+  architecture: string[];
   /** Concrete technical obstacles, not generic "it was hard." */
   challenges: string[];
   /** Outcomes with numbers where there are real numbers to give. */
   results: string[];
+  /** What carries forward to the next project — distinct from `challenges`:
+   *  those are what went wrong, these are what was learned from it. */
+  lessons: string[];
   /** Image paths. Empty is fine and renders an honest placeholder — never faked. */
   screenshots: string[];
   links: {
