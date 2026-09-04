@@ -6,7 +6,7 @@
  * a project means adding one `Project`; it then appears everywhere at once.
  */
 
-export type ModuleId = "readme" | "projects" | "stack" | "timeline" | "contact";
+export type ModuleId = "readme" | "projects" | "stack" | "timeline" | "contact" | "now";
 
 export interface OSModule {
   id: ModuleId;
@@ -66,6 +66,34 @@ export interface Project {
   };
   /** Optional honesty note — what you'd do differently. Recruiters notice. */
   retro?: string;
+}
+
+/** One row of the `/dev/now` status table — `label` is the fixed left-hand
+ *  word ("Building", "Learning", …), `value` is the only part that changes. */
+export interface NowFocusItem {
+  label: string;
+  value: string;
+}
+
+/** A name plus the one line that explains it — used for both `favoriteTech`
+ *  (taste, not proficiency — see `stack.ts` for the honest ratings) and
+ *  `experiments` (small, finished-or-not side projects). */
+export interface NowLink {
+  name: string;
+  note: string;
+  href?: string;
+}
+
+export interface Now {
+  /** Hand-set, not computed — the point is that a stale date is visible. */
+  updated: string;
+  focus: NowFocusItem[];
+  favoriteTech: NowLink[];
+  preferences: string[];
+  principles: string[];
+  experiments: NowLink[];
+  /** One human paragraph. Signed, not corporate. */
+  note: string;
 }
 
 export interface StackItem {
@@ -141,7 +169,8 @@ export type VFileKind =
   | "stack"
   | "timeline"
   | "contact"
-  | "resume";
+  | "resume"
+  | "now";
 
 export interface VFile {
   type: "file";

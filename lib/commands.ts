@@ -2,6 +2,7 @@ import {
   filesystem,
   getProject,
   modules,
+  now,
   profile,
   projects,
   stack,
@@ -88,6 +89,15 @@ const lines = (values: Span[]): Block => ({ type: "lines", lines: values });
 
 const error = (value: string): Block => text(value, "err");
 
+/** The `/dev/now` focus table, plus availability read live from `profile` so
+ *  the terminal and the page can never quietly disagree with each other. */
+function nowRows(): { k: string; v: string }[] {
+  return [
+    ...now.focus.map((f) => ({ k: f.label.toLowerCase(), v: f.value })),
+    { k: "open to", v: profile.availability.label },
+  ];
+}
+
 /** `open` accepts anything a human might reasonably type at it. */
 function resolveTarget(target: string): string | null {
   const q = target.toLowerCase().replace(/\/$/, "");
@@ -117,6 +127,7 @@ function resolveTarget(target: string): string | null {
 const PRIMARY_HELP_ORDER = [
   "help",
   "whoami",
+  "now",
   "about",
   "skills",
   "projects",
@@ -270,6 +281,16 @@ const COMMANDS: CommandSpec[] = [
           { k: "email", v: profile.email },
         ],
       },
+    ],
+  },
+
+  {
+    name: "now",
+    usage: "now",
+    summary: "What I'm doing right now",
+    run: () => [
+      { type: "kv", rows: nowRows() },
+      text(`updated ${now.updated} — open dev/now for the rest`, "faint"),
     ],
   },
 
@@ -630,6 +651,9 @@ function renderFile(kind: string, ref?: string): Block[] {
 
     case "resume":
       return [text("resume.pdf is a binary file. Run 'resume' to open it.", "faint")];
+
+    case "now":
+      return [{ type: "kv", rows: nowRows() }];
 
     default:
       return [error("cat: unknown file type")];

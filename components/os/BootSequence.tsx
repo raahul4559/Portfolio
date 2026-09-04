@@ -7,11 +7,11 @@ import { hasBooted, markBooted } from "@/lib/boot";
 import { useMounted } from "@/lib/hooks";
 
 /**
- * The five things the rest of the OS is built from. Order matches the
- * Activity Bar's own content shortcuts, so booting already previews the
- * site's shape before a single click.
+ * What the rest of the OS is built from. Order matches the Activity Bar's
+ * own content shortcuts, so booting already previews the site's shape
+ * before a single click.
  */
-const LINES = ["identity", "projects", "experience", "skills", "experiments"];
+const LINES = ["identity", "projects", "skills", "experience", "contact", "focus"];
 
 const LINE_MS = 115;
 const READY_HOLD_MS = 150;
