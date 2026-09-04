@@ -280,7 +280,9 @@ export function Terminal() {
       >
         <div className="space-y-2">
           {blocks.map((block, i) => (
-            <BlockView key={i} block={block} />
+            <div key={i} className="anim-fade">
+              <BlockView block={block} />
+            </div>
           ))}
         </div>
 

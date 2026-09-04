@@ -58,7 +58,7 @@ export function TabBar({ activeRoute }: { activeRoute: string }) {
                 e.preventDefault();
                 handleClose(route);
               }}
-              className={`hair-r group relative flex shrink-0 items-center gap-2 pr-1.5 pl-3 font-mono text-ui transition-colors duration-150 ${
+              className={`hair-r anim-fade group relative flex shrink-0 items-center gap-2 pr-1.5 pl-3 font-mono text-ui transition-colors duration-150 ${
                 active
                   ? "text-text bg-surface-2"
                   : "text-faint hover:text-muted hover:bg-surface"

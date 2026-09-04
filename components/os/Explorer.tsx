@@ -147,7 +147,7 @@ function ExplorerTree({
             onClick={() => open(row)}
             onKeyDown={(e) => onKeyDown(e, i)}
             style={{ paddingLeft: `${12 + row.depth * 16}px` }}
-            className={`group hover:bg-surface-2 relative flex w-full items-center gap-2 py-1.5 pr-3 text-left transition-colors duration-150 ${
+            className={`group hover:bg-surface-2 anim-fade relative flex w-full items-center gap-2 py-1.5 pr-3 text-left transition-colors duration-150 ${
               isActive ? "bg-accent-tint text-text" : "text-muted"
             }`}
           >

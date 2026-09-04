@@ -110,12 +110,7 @@ export function NowModule() {
       </Section>
 
       <Section label="note">
-        <p className="prose-os text-pretty">
-          {now.note}{" "}
-          <span aria-hidden className="text-accent animate-pulse">
-            ▊
-          </span>
-        </p>
+        <p className="prose-os text-pretty">{now.note}</p>
       </Section>
     </Document>
   );

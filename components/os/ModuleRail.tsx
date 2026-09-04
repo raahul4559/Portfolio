@@ -98,7 +98,7 @@ export function MobileBar({ activeRoute }: { activeRoute: string }) {
           >
             <span
               aria-hidden
-              className={`h-0.5 w-5 ${active ? "bg-accent" : "bg-transparent"}`}
+              className={`h-0.5 w-5 transition-colors duration-150 ${active ? "bg-accent" : "bg-transparent"}`}
             />
             <span className="text-micro font-mono tracking-wide">{mod.label}</span>
           </Link>
@@ -117,7 +117,7 @@ export function MobileBar({ activeRoute }: { activeRoute: string }) {
       >
         <span
           aria-hidden
-          className={`h-0.5 w-5 ${explorerOpen ? "bg-accent" : "bg-transparent"}`}
+          className={`h-0.5 w-5 transition-colors duration-150 ${explorerOpen ? "bg-accent" : "bg-transparent"}`}
         />
         <span aria-hidden className="label leading-none">
           FS
@@ -134,7 +134,7 @@ export function MobileBar({ activeRoute }: { activeRoute: string }) {
       >
         <span
           aria-hidden
-          className={`h-0.5 w-5 ${terminalOpen ? "bg-accent" : "bg-transparent"}`}
+          className={`h-0.5 w-5 transition-colors duration-150 ${terminalOpen ? "bg-accent" : "bg-transparent"}`}
         />
         <span aria-hidden className="label leading-none">
           SH

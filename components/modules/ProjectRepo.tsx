@@ -171,7 +171,7 @@ export function ProjectRepo({ project }: { project: Project }) {
                     role="tab"
                     aria-selected={active}
                     onClick={() => setActiveFile(id)}
-                    className={`hair-r group relative flex shrink-0 items-center gap-2 py-2 pr-1.5 pl-3 font-mono text-micro transition-colors duration-150 ${
+                    className={`hair-r anim-fade group relative flex shrink-0 items-center gap-2 py-2 pr-1.5 pl-3 font-mono text-micro transition-colors duration-150 ${
                       active
                         ? "text-text bg-surface-2"
                         : "text-faint hover:text-muted hover:bg-surface"

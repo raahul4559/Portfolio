@@ -245,7 +245,7 @@ function Item({
       {/* The accent bar marks the selected row and nothing else. */}
       <span
         aria-hidden
-        className="bg-accent h-3.5 w-0.5 shrink-0 opacity-0 group-data-[selected=true]:opacity-100"
+        className="bg-accent h-3.5 w-0.5 shrink-0 opacity-0 transition-opacity duration-100 group-data-[selected=true]:opacity-100"
       />
       <span className="text-data min-w-0 shrink-0 font-mono">{title}</span>
       {subtitle && (
