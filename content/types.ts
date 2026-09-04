@@ -100,7 +100,8 @@ export interface Social {
 }
 
 export interface Profile {
-  /** Shell username — appears in the terminal prompt as `handle@rahul.os`. */
+  /** Short username, kept for reference — the terminal prompt itself reads
+   *  `visitor@{host}`, since it's a guest shell on this machine, not mine. */
   handle: string;
   /** Hostname — the OS wordmark. */
   host: string;

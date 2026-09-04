@@ -4,7 +4,7 @@ import { StackModule } from "@/components/modules/Stack";
 import { moduleById } from "@/content";
 
 export const metadata: Metadata = {
-  title: "stack",
+  title: "skills",
   description: moduleById.get("stack")?.description,
 };
 

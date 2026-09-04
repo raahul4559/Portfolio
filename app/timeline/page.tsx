@@ -4,7 +4,7 @@ import { TimelineModule } from "@/components/modules/Timeline";
 import { moduleById } from "@/content";
 
 export const metadata: Metadata = {
-  title: "timeline",
+  title: "experience",
   description: moduleById.get("timeline")?.description,
 };
 

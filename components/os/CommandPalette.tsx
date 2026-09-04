@@ -17,6 +17,15 @@ interface Action {
   run: () => void;
 }
 
+/** Proper-noun casing for a natural "Open X" sentence — `social.label` itself
+ *  stays lowercase, since that's the mono chrome voice used everywhere else
+ *  it appears (Contact, the terminal). */
+const SOCIAL_DISPLAY_NAME: Record<string, string> = {
+  github: "GitHub",
+  linkedin: "LinkedIn",
+  x: "X",
+};
+
 /**
  * ⌘K. Searches the same index the terminal completes against, plus the
  * actions that would otherwise be buried in the chrome. Everything reachable
@@ -119,9 +128,9 @@ export function CommandPalette() {
     },
     ...profile.socials.map<Action>((social) => ({
       id: `social-${social.label}`,
-      title: `Open ${social.label}`,
+      title: `Open ${SOCIAL_DISPLAY_NAME[social.label] ?? social.label}`,
       hint: social.handle,
-      keywords: ["social", "profile", social.handle],
+      keywords: ["social", "profile", social.label, social.handle],
       run: () => {
         setOpen(false);
         openExternal(social.href);
@@ -146,7 +155,7 @@ export function CommandPalette() {
         <Command.Input
           value={search}
           onValueChange={setSearch}
-          placeholder="Search modules, projects, actions…"
+          placeholder="Search portfolio…"
           className="text-text placeholder:text-faint h-12 flex-1 bg-transparent font-mono text-data outline-none"
         />
         <kbd className="text-faint hidden font-mono text-micro sm:block">esc</kbd>

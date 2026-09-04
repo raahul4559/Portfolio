@@ -60,8 +60,24 @@ interface CommandSpec {
   name: string;
   usage: string;
   summary: string;
+  /** Real and executable, but left out of `help` and tab-completion. */
+  hidden?: boolean;
   run: (args: string[], ctx: CommandContext) => Block[];
 }
+
+/**
+ * The name in the prompt. Deliberately not `profile.handle` — this is a
+ * guest shell on *my* machine, not a recording of my own session, so the
+ * visitor is who's logged in. `whoami` still resolves to me, because it's my
+ * OS answering, not the visitor's own identity.
+ */
+export const SHELL_USER = "visitor";
+
+/** Old names keep working; only the canonical name shows up in `help`. */
+const ALIASES: Record<string, string> = {
+  stack: "skills",
+  timeline: "experience",
+};
 
 const text = (value: string, tone: Tone = "text"): Block => ({
   type: "lines",
@@ -97,22 +113,51 @@ function resolveTarget(target: string): string | null {
   return null;
 }
 
+/** Display order for `help`'s primary block — independent of definition order. */
+const PRIMARY_HELP_ORDER = [
+  "help",
+  "whoami",
+  "about",
+  "skills",
+  "projects",
+  "experience",
+  "contact",
+  "github",
+  "resume",
+  "clear",
+  "date",
+  "status",
+];
+
 const COMMANDS: CommandSpec[] = [
   {
     name: "help",
     usage: "help",
-    summary: "List every command",
-    run: () => [
-      text("Available commands. Paths accept ~, .. and tab completion.", "faint"),
-      {
-        type: "kv",
-        rows: COMMANDS.map((c) => ({ k: c.usage, v: c.summary })),
-      },
-      lines([
-        { text: "" },
-        { text: "Keyboard: ⌘K palette · ` terminal · ? shortcuts", tone: "faint" },
-      ]),
-    ],
+    summary: "Show this help",
+    run: () => {
+      const byName = new Map(COMMANDS.map((c) => [c.name, c]));
+      const primary = PRIMARY_HELP_ORDER.map((name) => byName.get(name)).filter(
+        (c): c is CommandSpec => Boolean(c),
+      );
+      const filesystem = COMMANDS.filter(
+        (c) => !c.hidden && !PRIMARY_HELP_ORDER.includes(c.name),
+      );
+
+      return [
+        text("Available commands:", "muted"),
+        { type: "kv", rows: primary.map((c) => ({ k: c.name, v: c.summary })) },
+        lines([{ text: "" }, { text: "Filesystem", tone: "faint" }]),
+        { type: "kv", rows: filesystem.map((c) => ({ k: c.usage, v: c.summary })) },
+        lines([
+          { text: "" },
+          {
+            text: "Keyboard: ⌘K palette · ` terminal · ? shortcuts",
+            tone: "faint",
+          },
+          { text: "There are a few more commands than this. Good luck.", tone: "faint" },
+        ]),
+      ];
+    },
   },
 
   {
@@ -208,7 +253,7 @@ const COMMANDS: CommandSpec[] = [
   {
     name: "whoami",
     usage: "whoami",
-    summary: "Short bio",
+    summary: "Who you're talking to",
     run: () => [
       lines([
         { text: profile.name },
@@ -229,9 +274,19 @@ const COMMANDS: CommandSpec[] = [
   },
 
   {
+    name: "about",
+    usage: "about",
+    summary: "Learn about me",
+    run: (_args, ctx) => {
+      ctx.navigate("/");
+      return [text("opening ~/readme.md", "faint")];
+    },
+  },
+
+  {
     name: "projects",
     usage: "projects",
-    summary: "List projects with status",
+    summary: "Explore my projects",
     run: () => [
       {
         type: "kv",
@@ -240,14 +295,14 @@ const COMMANDS: CommandSpec[] = [
           v: `${p.year}  ${p.description}`,
         })),
       },
-      text("cat projects/<name> for the full write-up", "faint"),
+      text("cat projects/<name> for the full source", "faint"),
     ],
   },
 
   {
-    name: "stack",
-    usage: "stack",
-    summary: "Tools by domain",
+    name: "skills",
+    usage: "skills",
+    summary: "View my technical skills",
     run: () => [
       {
         type: "kv",
@@ -256,14 +311,30 @@ const COMMANDS: CommandSpec[] = [
           v: group.items.map((i) => i.name).join(", "),
         })),
       },
-      text("open stack for ratings and notes", "faint"),
+      text("open skills for ratings and notes", "faint"),
+    ],
+  },
+
+  {
+    name: "experience",
+    usage: "experience",
+    summary: "View my experience",
+    run: () => [
+      {
+        type: "kv",
+        rows: timeline.map((entry) => ({
+          k: `${entry.from}–${entry.to === "present" ? "now" : entry.to}`,
+          v: `${entry.role} · ${entry.org}`,
+        })),
+      },
+      text("open experience for the full timeline", "faint"),
     ],
   },
 
   {
     name: "contact",
     usage: "contact",
-    summary: "How to reach me",
+    summary: "Get in touch",
     run: () => [
       {
         type: "kv",
@@ -278,13 +349,61 @@ const COMMANDS: CommandSpec[] = [
   },
 
   {
+    name: "github",
+    usage: "github",
+    summary: "Open GitHub",
+    run: (_args, ctx) => {
+      const gh = profile.socials.find((s) => s.label === "github");
+      if (!gh) return [error("github: no link configured")];
+      ctx.navigate(gh.href);
+      return [text(`opening ${gh.href}`, "faint")];
+    },
+  },
+
+  {
     name: "resume",
     usage: "resume",
-    summary: "Open the resume PDF",
+    summary: "View my resume",
     run: (_args, ctx) => {
       ctx.navigate(profile.resume);
       return [text(`opening ${profile.resume}`, "faint")];
     },
+  },
+
+  {
+    name: "date",
+    usage: "date",
+    summary: "Current date and time",
+    run: () => {
+      const now = new Date();
+      const formatted = new Intl.DateTimeFormat("en-US", {
+        timeZone: profile.timezone,
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }).format(now);
+      return [text(`${formatted} ${profile.timezoneLabel}`, "muted")];
+    },
+  },
+
+  {
+    name: "status",
+    usage: "status",
+    summary: "Availability and system status",
+    run: () => [
+      {
+        type: "kv",
+        rows: [
+          { k: "availability", v: profile.availability.label },
+          { k: "responds in", v: profile.availability.responseTime },
+          { k: "location", v: `${profile.location} · ${profile.timezoneLabel}` },
+          { k: "shell", v: "os-sh — online" },
+        ],
+      },
+    ],
   },
 
   {
@@ -328,7 +447,7 @@ const COMMANDS: CommandSpec[] = [
         type: "sysinfo",
         rows: [
           { k: "host", v: `${profile.host} v${profile.version}` },
-          { k: "user", v: profile.handle },
+          { k: "user", v: SHELL_USER },
           { k: "role", v: profile.role },
           { k: "uptime", v: profile.experience },
           { k: "modules", v: String(systemStats.modules) },
@@ -345,7 +464,7 @@ const COMMANDS: CommandSpec[] = [
   {
     name: "clear",
     usage: "clear",
-    summary: "Clear the screen",
+    summary: "Clear terminal",
     run: (_args, ctx) => {
       ctx.clear();
       return [];
@@ -363,12 +482,55 @@ const COMMANDS: CommandSpec[] = [
     name: "sudo",
     usage: "sudo <command>",
     summary: "Elevate privileges",
+    run: (args) => {
+      if (args.join(" ") === "hire-me") {
+        return [
+          text("Checking candidate...", "muted"),
+          lines([
+            { text: "" },
+            dotLine("Skills"),
+            dotLine("Experience"),
+            dotLine("Projects"),
+            dotLine("Coffee"),
+            { text: "" },
+            { text: "Result: Highly recommended.", tone: "ok" },
+          ]),
+        ];
+      }
+
+      return [
+        lines([
+          { text: `${SHELL_USER} is not in the sudoers file.`, tone: "err" },
+          { text: "This incident has been reported.", tone: "faint" },
+          { text: "" },
+          { text: "(It hasn't. There's no server. Try 'help'.)", tone: "faint" },
+        ]),
+      ];
+    },
+  },
+
+  {
+    name: "matrix",
+    usage: "matrix",
+    summary: "???",
+    hidden: true,
     run: () => [
       lines([
-        { text: `${profile.handle} is not in the sudoers file.`, tone: "err" },
-        { text: "This incident has been reported.", tone: "faint" },
-        { text: "" },
-        { text: "(It hasn't. There's no server. Try 'help'.)", tone: "faint" },
+        { text: "Entering developer mode...", tone: "accent" },
+        { text: "Wake up, visitor. The build passed.", tone: "faint" },
+      ]),
+    ],
+  },
+
+  {
+    name: "coffee",
+    usage: "coffee",
+    summary: "???",
+    hidden: true,
+    run: () => [
+      lines([
+        { text: "☕ brewing...", tone: "muted" },
+        { text: "Productivity restored.", tone: "faint" },
       ]),
     ],
   },
@@ -384,7 +546,14 @@ const COMMANDS: CommandSpec[] = [
   },
 ];
 
-export const COMMAND_NAMES = COMMANDS.map((c) => c.name);
+/** Tab-completion and typo-suggestion candidates — hidden commands opt out. */
+export const COMMAND_NAMES = COMMANDS.filter((c) => !c.hidden).map((c) => c.name);
+
+/** `Label ............. ✓` — the same dot-leader the boot sequence uses. */
+function dotLine(label: string, width = 22): Span {
+  const dots = ".".repeat(Math.max(3, width - label.length));
+  return { text: `${label} ${dots} ✓`, tone: "text" };
+}
 
 /** Commands that take a path as their first argument, for tab completion. */
 export const PATH_COMMANDS = new Set(["ls", "cd", "cat", "open"]);
@@ -475,7 +644,8 @@ export function execute(input: string, ctx: CommandContext): Block[] {
   const trimmed = input.trim();
   if (!trimmed) return [];
 
-  const [name, ...args] = trimmed.split(/\s+/);
+  const [rawName, ...args] = trimmed.split(/\s+/);
+  const name = ALIASES[rawName] ?? rawName;
   const command = COMMANDS.find((c) => c.name === name);
 
   if (!command) {

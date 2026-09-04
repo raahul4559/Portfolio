@@ -4,6 +4,7 @@ import { ProjectRow } from "@/components/modules/ProjectRow";
 import { Document, Section } from "@/components/ui/Document";
 import { CtaButton, MetaList } from "@/components/ui/bits";
 import { featuredProjects, profile, projects } from "@/content";
+import { SHELL_USER } from "@/lib/commands";
 
 export function ReadmeModule() {
   return (
@@ -13,9 +14,9 @@ export function ReadmeModule() {
 
         {/* Echoes the boot sequence's own shell — the desktop remembers
             where it came from instead of pretending the terminal never
-            happened. */}
+            happened. You ran whoami; this machine answered for itself. */}
         <p className="font-mono text-data mb-6">
-          <span className="text-accent">{profile.handle}</span>
+          <span className="text-accent">{SHELL_USER}</span>
           <span className="text-faint">@{profile.host}:~$</span>{" "}
           <span className="text-muted">whoami</span>
         </p>

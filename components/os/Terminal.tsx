@@ -7,6 +7,7 @@ import { profile } from "@/content";
 import {
   COMMAND_NAMES,
   PATH_COMMANDS,
+  SHELL_USER,
   execute,
   type Block,
   type Tone,
@@ -311,7 +312,7 @@ export function Terminal() {
 function Prompt({ cwd }: { cwd: string }) {
   return (
     <span className="shrink-0 whitespace-nowrap select-none">
-      <span className="text-accent">{profile.handle}</span>
+      <span className="text-accent">{SHELL_USER}</span>
       <span className="text-faint">@{profile.host}</span>
       <span className="text-faint">:</span>
       <span className="text-muted">{cwd}</span>
