@@ -6,7 +6,7 @@ export function StackModule() {
   return (
     <Document>
       <DocumentHead
-        eyebrow="stack.md"
+        eyebrow="skills.md"
         title="Tools, honestly rated"
         summary="Five blocks means I could teach it and have debugged it in production at 3am. Two means I shipped something small. The note underneath matters more than the blocks — a rating without context is just a number."
         aside={

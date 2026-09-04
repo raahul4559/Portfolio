@@ -1,5 +1,6 @@
 "use client";
 
+import { Folder, Terminal } from "lucide-react";
 import Link from "next/link";
 
 import { modules } from "@/content";
@@ -75,7 +76,9 @@ export function ModuleRail({ activeRoute }: { activeRoute: string }) {
  */
 export function MobileBar({ activeRoute }: { activeRoute: string }) {
   const activeModule = describeRoute(activeRoute).moduleId;
+  const terminalOpen = useOS((s) => s.terminalOpen);
   const toggleTerminal = useOS((s) => s.toggleTerminal);
+  const explorerOpen = useOS((s) => s.explorerOpen);
   const toggleExplorer = useOS((s) => s.toggleExplorer);
 
   return (
@@ -102,23 +105,37 @@ export function MobileBar({ activeRoute }: { activeRoute: string }) {
           </Link>
         );
       })}
+      {/* Actions, not destinations — icon-only so five text labels keep
+          their room to breathe instead of competing with two more words. */}
       <button
         type="button"
         onClick={toggleExplorer}
         aria-label="Open file explorer"
-        className="hair-l text-faint flex w-14 flex-col items-center justify-center gap-1"
+        aria-pressed={explorerOpen}
+        className={`hair-l flex w-11 flex-col items-center justify-center gap-1 transition-colors duration-150 ${
+          explorerOpen ? "text-text" : "text-faint"
+        }`}
       >
-        <span aria-hidden className="h-0.5 w-5 bg-transparent" />
-        <span className="text-micro font-mono tracking-wide">files</span>
+        <span
+          aria-hidden
+          className={`h-0.5 w-5 ${explorerOpen ? "bg-accent" : "bg-transparent"}`}
+        />
+        <Folder aria-hidden size={16} strokeWidth={1.75} />
       </button>
       <button
         type="button"
         onClick={toggleTerminal}
         aria-label="Open terminal"
-        className="hair-l text-faint flex w-14 flex-col items-center justify-center gap-1"
+        aria-pressed={terminalOpen}
+        className={`hair-l flex w-11 flex-col items-center justify-center gap-1 transition-colors duration-150 ${
+          terminalOpen ? "text-text" : "text-faint"
+        }`}
       >
-        <span aria-hidden className="h-0.5 w-5 bg-transparent" />
-        <span className="text-micro font-mono tracking-wide">shell</span>
+        <span
+          aria-hidden
+          className={`h-0.5 w-5 ${terminalOpen ? "bg-accent" : "bg-transparent"}`}
+        />
+        <Terminal aria-hidden size={16} strokeWidth={1.75} />
       </button>
     </nav>
   );

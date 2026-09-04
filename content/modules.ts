@@ -27,7 +27,7 @@ export const modules: OSModule[] = [
     id: "stack",
     code: "SK",
     label: "skills",
-    file: "stack.md",
+    file: "skills.md",
     route: "/stack",
     description: "Tools, honestly rated",
     keywords: ["stack", "tech", "tools", "languages", "proficiency"],

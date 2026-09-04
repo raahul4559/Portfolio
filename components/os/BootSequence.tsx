@@ -94,7 +94,7 @@ export function BootSequence() {
 
   return (
     <div
-      className={`boot flex items-center justify-center px-6 transition-all duration-[220ms] ease-[var(--ease-os)] ${
+      className={`boot flex items-center justify-center px-6 transition-[opacity,transform] duration-[220ms] ease-[var(--ease-os)] ${
         leaving ? "translate-y-[-6px] scale-[0.985] opacity-0" : "translate-y-0 scale-100 opacity-100"
       }`}
       aria-hidden

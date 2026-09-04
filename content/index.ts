@@ -66,7 +66,7 @@ export const filesystem: VDir = {
     },
     {
       type: "file",
-      name: "stack.md",
+      name: "skills.md",
       kind: "stack",
       route: "/stack",
       size: weigh(...stack.map((g) => g.items.map((i) => i.note).join(""))),
