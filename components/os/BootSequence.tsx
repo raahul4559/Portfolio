@@ -2,36 +2,27 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { profile, systemStats } from "@/content";
+import { profile } from "@/content";
 import { hasBooted, markBooted } from "@/lib/boot";
 import { useMounted } from "@/lib/hooks";
 
-interface BootLine {
-  op: string;
-  target: string;
-  detail: string;
-}
-
 /**
- * Every line reports something real from the content layer. If a project is
- * added, this screen counts it — which is the difference between a boot
- * sequence and a loading animation.
+ * The five things the rest of the OS is built from. Order matches the
+ * Activity Bar's own content shortcuts, so booting already previews the
+ * site's shape before a single click.
  */
-const LINES: BootLine[] = [
-  { op: "mount", target: "/profile", detail: profile.name.toLowerCase().replace(/\s+/g, "-") },
-  { op: "index", target: "/projects", detail: `${systemStats.projects} entries` },
-  { op: "load", target: "/stack", detail: `${systemStats.stackItems} tools · ${systemStats.stackDomains} domains` },
-  { op: "load", target: "/timeline", detail: systemStats.timelineSpan },
-  { op: "link", target: "/modules", detail: `${systemStats.modules} mounted` },
-];
+const LINES = ["identity", "projects", "experience", "skills", "experiments"];
 
-const STEP_MS = 190;
-const HOLD_MS = 520;
+const LINE_MS = 115;
+const READY_HOLD_MS = 150;
+const AUTO_CONTINUE_MS = 1400;
 
 /**
  * Overlays content that is already in the DOM rather than gating it, and is
  * skipped entirely for repeat visits in a session, for reduced-motion users,
- * and when JavaScript is unavailable. It is a greeting, never a gate.
+ * and when JavaScript is unavailable. It is a greeting, never a gate — every
+ * stage is skippable by any key or click, and it auto-continues on its own
+ * shortly after reaching ready in case nobody touches anything.
  */
 export function BootSequence() {
   // Rendered on the server so first-time visitors never see the site flash
@@ -39,6 +30,7 @@ export function BootSequence() {
   const mounted = useMounted();
   const [visible, setVisible] = useState(true);
   const [step, setStep] = useState(0);
+  const [ready, setReady] = useState(false);
   const [leaving, setLeaving] = useState(false);
   const skipped = useRef(false);
 
@@ -47,7 +39,9 @@ export function BootSequence() {
     skipped.current = true;
     markBooted();
     setLeaving(true);
-    setTimeout(() => setVisible(false), 200);
+    // Matches the exit transition below — the overlay collapses into the
+    // desktop rather than simply vanishing.
+    setTimeout(() => setVisible(false), 220);
   }, []);
 
   useEffect(() => {
@@ -64,92 +58,93 @@ export function BootSequence() {
       return;
     }
 
-    // Shorter on small screens: a phone visitor is more likely to be
-    // impatient and less likely to be impressed by a shell.
-    const compact = window.innerWidth < 768;
-    const stepMs = compact ? STEP_MS * 0.65 : STEP_MS;
-
     const timers: ReturnType<typeof setTimeout>[] = [];
     LINES.forEach((_, i) => {
-      timers.push(setTimeout(() => setStep(i + 1), stepMs * (i + 1)));
+      timers.push(setTimeout(() => setStep(i + 1), LINE_MS * (i + 1)));
     });
-    timers.push(setTimeout(finish, stepMs * LINES.length + HOLD_MS));
+    timers.push(
+      setTimeout(() => setReady(true), LINE_MS * LINES.length + READY_HOLD_MS),
+    );
+    timers.push(
+      setTimeout(
+        finish,
+        LINE_MS * LINES.length + READY_HOLD_MS + AUTO_CONTINUE_MS,
+      ),
+    );
 
     return () => timers.forEach(clearTimeout);
   }, [finish]);
 
   useEffect(() => {
     if (!visible) return;
-    const onAny = () => finish();
-    window.addEventListener("keydown", onAny, { once: true });
-    window.addEventListener("pointerdown", onAny, { once: true });
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Tab") return; // don't eat keyboard nav on skip
+      finish();
+    };
+    const onPointer = () => finish();
+    window.addEventListener("keydown", onKey);
+    window.addEventListener("pointerdown", onPointer);
     return () => {
-      window.removeEventListener("keydown", onAny);
-      window.removeEventListener("pointerdown", onAny);
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("pointerdown", onPointer);
     };
   }, [visible, finish]);
 
   if (!visible) return null;
 
-  const done = step >= LINES.length;
-
   return (
     <div
-      className={`boot flex items-center justify-center px-6 transition-opacity duration-200 ease-[var(--ease-os)] ${
-        leaving ? "opacity-0" : "opacity-100"
+      className={`boot flex items-center justify-center px-6 transition-all duration-[220ms] ease-[var(--ease-os)] ${
+        leaving ? "translate-y-[-6px] scale-[0.985] opacity-0" : "translate-y-0 scale-100 opacity-100"
       }`}
       aria-hidden
     >
-      <div className="w-full max-w-[440px] font-mono text-data">
-        <p className="text-text">
-          {profile.host}
-          <span className="text-faint"> v{profile.version}</span>
+      <div className="w-full max-w-[420px] font-mono text-data">
+        <p className="text-text tracking-[0.04em]">
+          [ <span className="text-accent">{profile.host.split(".")[0].toUpperCase()}</span>
+          <span className="text-faint">.OS</span> ]
         </p>
 
-        <div className="mt-6 space-y-1.5">
+        <p className="text-faint mt-6">Initializing environment...</p>
+
+        <div className="mt-3 space-y-1.5">
           {LINES.map((line, i) => {
             // Before mount nothing is revealed, so the server HTML and the
             // first client render agree.
             const revealed = mounted && i < step;
             return (
               <div
-                key={line.target}
+                key={line}
                 className={`flex items-baseline gap-2 transition-opacity duration-100 ${
                   revealed ? "opacity-100" : "opacity-0"
                 }`}
               >
-                <span className="text-faint w-11 shrink-0">{line.op}</span>
-                <span className="text-muted shrink-0">{line.target}</span>
+                <span className="text-muted shrink-0">Loading {line}</span>
                 <span
                   aria-hidden
                   className="text-faint min-w-4 flex-1 overflow-hidden text-clip whitespace-nowrap"
                 >
-                  {" ".padEnd(40, ".")}
+                  {" ".padEnd(48, ".")}
                 </span>
-                <span className="text-faint hidden shrink-0 text-micro sm:block">
-                  {line.detail}
-                </span>
-                <span className="text-ok shrink-0">ok</span>
+                <span className="text-ok shrink-0">✓</span>
               </div>
             );
           })}
         </div>
 
         <div
-          className={`mt-8 transition-opacity duration-150 ${
-            done ? "opacity-100" : "opacity-0"
+          className={`mt-7 transition-opacity duration-150 ${
+            ready ? "opacity-100" : "opacity-0"
           }`}
         >
-          <p className="text-muted">
-            welcome, visitor.
-            <span className="text-accent"> ▊</span>
+          <p className="text-text tracking-[0.08em]">
+            SYSTEM READY
+            <span className="text-accent animate-pulse"> ▊</span>
           </p>
-          <p className="text-faint mt-2 text-micro">
-            ⌘K to search · ` for a shell · ? for shortcuts
+          <p className="text-faint mt-3 text-micro">
+            Press <span className="text-muted">ENTER</span> or click to continue
           </p>
         </div>
-
-        <p className="text-faint mt-10 text-micro">press any key to skip</p>
       </div>
     </div>
   );

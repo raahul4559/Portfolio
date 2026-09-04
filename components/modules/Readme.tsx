@@ -1,28 +1,51 @@
 import Link from "next/link";
 
 import { ProjectRow } from "@/components/modules/ProjectRow";
-import { Document, DocumentHead, Section } from "@/components/ui/Document";
-import { MetaList } from "@/components/ui/bits";
+import { Document, Section } from "@/components/ui/Document";
+import { CtaButton, MetaList } from "@/components/ui/bits";
 import { featuredProjects, profile, projects } from "@/content";
 
 export function ReadmeModule() {
   return (
     <Document>
-      <DocumentHead
-        eyebrow="readme.md"
-        title={profile.name}
-        summary={profile.positioning}
-        aside={
-          <span className="text-micro text-faint font-mono">
-            {profile.location}
-          </span>
-        }
-      />
+      <header className="anim-rise mb-10 sm:mb-14">
+        <p className="label text-faint mb-4">readme.md</p>
+
+        {/* Echoes the boot sequence's own shell — the desktop remembers
+            where it came from instead of pretending the terminal never
+            happened. */}
+        <p className="font-mono text-data mb-6">
+          <span className="text-accent">{profile.handle}</span>
+          <span className="text-faint">@{profile.host}:~$</span>{" "}
+          <span className="text-muted">whoami</span>
+        </p>
+
+        <h1 className="text-h1 sm:text-display text-text font-medium tracking-[-0.02em] text-balance">
+          {profile.name}
+        </h1>
+        <p className="text-h3 text-muted mt-2 font-mono font-normal">
+          {profile.role}
+        </p>
+
+        <p className="text-body text-muted mt-5 max-w-[62ch] text-pretty">
+          {profile.positioning}
+        </p>
+
+        <div className="mt-7 flex flex-wrap gap-3">
+          <CtaButton href="/projects" primary>
+            View Projects
+          </CtaButton>
+          <CtaButton href="/timeline">Experience</CtaButton>
+          <CtaButton href={profile.resume} external>
+            Resume
+          </CtaButton>
+          <CtaButton href="/contact">Contact</CtaButton>
+        </div>
+      </header>
 
       <Section label="whoami">
         <MetaList
           items={[
-            { key: "role", value: profile.role },
             { key: "experience", value: profile.experience },
             { key: "location", value: `${profile.location} · ${profile.timezoneLabel}` },
             {

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 
 import type { ProjectStatus } from "@/content/types";
@@ -119,6 +120,57 @@ export function ExternalLink({
         {external ? "↗" : "→"}
       </span>
     </a>
+  );
+}
+
+/**
+ * The bracket-style action button — `[ Label ]` — used only in the README
+ * hero, where a recruiter needs the four highest-intent destinations
+ * (Projects, Experience, Resume, Contact) without scrolling or learning the
+ * OS metaphor first. `external` opens in a new tab rather than navigating
+ * the workspace; everything else stays a real Next.js route.
+ */
+export function CtaButton({
+  href,
+  children,
+  primary = false,
+  external = false,
+}: {
+  href: string;
+  children: ReactNode;
+  primary?: boolean;
+  external?: boolean;
+}) {
+  const className = `inline-flex items-center gap-1 rounded-xs border px-4 py-2.5 font-mono text-data transition-colors duration-150 ${
+    primary
+      ? "border-accent bg-accent-tint text-text hover:bg-accent hover:text-bg"
+      : "border-line-strong text-muted hover:text-text hover:bg-surface-2 hover:border-faint"
+  }`;
+
+  const inner = (
+    <>
+      <span aria-hidden className="opacity-60">
+        [
+      </span>
+      {children}
+      <span aria-hidden className="opacity-60">
+        ]
+      </span>
+    </>
+  );
+
+  if (external) {
+    return (
+      <a href={href} target="_blank" rel="noreferrer noopener" className={className}>
+        {inner}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} className={className}>
+      {inner}
+    </Link>
   );
 }
 
