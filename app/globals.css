@@ -1,26 +1,299 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ─────────────────────────────────────────────────────────────
+   rahul.os — design tokens
+   Two palettes: ink (default) and paper. Swapped via [data-theme]
+   on <html>. Accent is a STATE SIGNAL, never decoration.
+   ───────────────────────────────────────────────────────────── */
+
+:root,
+[data-theme="ink"] {
+  --bg: #0e0e0e;
+  --surface: #141414;
+  --surface-2: #1a1a1a;
+  --surface-3: #202020;
+  --border: #1f1f1f;
+  --border-strong: #2a2a2a;
+  --text: #ededed;
+  --muted: #7a7a7a;
+  --faint: #4a4a4a;
+  --accent: #ffb020;
+  --accent-weak: #4a3410;
+  --accent-tint: rgb(255 176 32 / 0.09);
+  --ok: #59c07b;
+  --warn: #e0a63a;
+  --err: #e0574a;
+  --shadow-layer: 0 8px 24px rgb(0 0 0 / 0.5);
+  --scrollbar: #2a2a2a;
+  --scrollbar-hover: #3a3a3a;
+  color-scheme: dark;
+}
+
+[data-theme="paper"] {
+  --bg: #fafaf8;
+  --surface: #ffffff;
+  --surface-2: #f3f3f0;
+  --surface-3: #ecece8;
+  --border: #e4e4e0;
+  --border-strong: #d2d2cc;
+  --text: #131313;
+  --muted: #6b6b66;
+  --faint: #a3a39c;
+  --accent: #c2410c;
+  --accent-weak: #f5d9cc;
+  --accent-tint: rgb(194 65 12 / 0.07);
+  --ok: #2f7d4d;
+  --warn: #9a6b12;
+  --err: #b3392c;
+  --shadow-layer: 0 8px 24px rgb(19 19 19 / 0.13);
+  --scrollbar: #d2d2cc;
+  --scrollbar-hover: #b8b8b0;
+  color-scheme: light;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-weak: var(--accent-weak);
+  --color-accent-tint: var(--accent-tint);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-err: var(--err);
+
+  --font-sans: var(--font-ui), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-data), ui-monospace, SFMono-Regular, monospace;
+
+  /* Type scale — deliberately narrow. */
+  --text-micro: 0.625rem;    /* 10 — dense metadata */
+  --text-micro--line-height: 1.2;
+  --text-label: 0.6875rem;   /* 11 — chrome labels, uppercase */
+  --text-label--line-height: 1.2;
+  --text-ui: 0.75rem;        /* 12 — secondary UI */
+  --text-ui--line-height: 1.35;
+  --text-data: 0.8125rem;    /* 13 — mono data, paths, metrics */
+  --text-data--line-height: 1.5;
+  --text-body: 0.9375rem;    /* 15 — prose */
+  --text-body--line-height: 1.65;
+  --text-h3: 1.0625rem;      /* 17 */
+  --text-h3--line-height: 1.35;
+  --text-h2: 1.375rem;       /* 22 */
+  --text-h2--line-height: 1.25;
+  --text-h1: 1.75rem;        /* 28 */
+  --text-h1--line-height: 1.15;
+  --text-display: 2.5rem;    /* 40 */
+  --text-display--line-height: 1.05;
+
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+
+  --ease-os: cubic-bezier(0.2, 0, 0, 1);
+
+  --shadow-layer: var(--shadow-layer);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Fixed chrome metrics — referenced by the shell grid. */
+:root {
+  --h-systembar: 36px;
+  --h-tabbar: 34px;
+  --h-statusbar: 28px;
+  --w-rail: 56px;
+  --w-rail-open: 208px;
+  --h-mobilebar: 52px;
+}
+
+@layer base {
+  /* Tailwind v4 defaults borders to currentColor; restore a token default
+     so every hairline in the app is consistent without repetition. */
+  *,
+  ::before,
+  ::after {
+    border-color: var(--border);
+  }
+
+  html {
+    height: 100%;
+    background: var(--bg);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior: none;
+  }
+
+  ::selection {
+    background: var(--accent-tint);
+    color: var(--text);
+  }
+
+  /* One focus treatment across the whole OS: a 1px accent ring. */
+  :focus {
+    outline: none;
+  }
+  :focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: 1px;
+    border-radius: 1px;
+  }
+
+  /* Thin scrollbars that read as part of the chrome, not the OS's. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar);
+    border: 3px solid transparent;
+    background-clip: content-box;
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-hover);
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  /* Mono numerals everywhere numbers are compared. */
+  .tnum {
+    font-variant-numeric: tabular-nums;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Chrome label: 11px uppercase, wide tracking. Used in bars and
+     section headers so the whole environment shares one voice. */
+  .label {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Hairline separators that survive both themes. */
+  .hair-t {
+    border-top: 1px solid var(--border);
+  }
+  .hair-b {
+    border-bottom: 1px solid var(--border);
+  }
+  .hair-l {
+    border-left: 1px solid var(--border);
+  }
+  .hair-r {
+    border-right: 1px solid var(--border);
+  }
+
+  .layer {
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    box-shadow: var(--shadow-layer);
+  }
+
+  /* Prose inside module documents. Constrained measure, generous leading. */
+  .prose-os {
+    font-size: var(--text-body);
+    line-height: 1.65;
+    color: var(--muted);
+    max-width: 68ch;
+  }
+  .prose-os strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+  .prose-os a {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--border-strong);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 140ms var(--ease-os);
+  }
+  .prose-os a:hover {
+    text-decoration-color: var(--accent);
+  }
+  .prose-os code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--text);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 0.1em 0.3em;
+  }
+}
+
+@layer utilities {
+  /* The single motion primitive: fade + ≤4px rise. */
+  @keyframes os-rise {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes os-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .anim-rise {
+    animation: os-rise 180ms var(--ease-os) both;
+  }
+  .anim-fade {
+    animation: os-fade 140ms var(--ease-os) both;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+}
+
+/* Motion is a courtesy, not a requirement. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
