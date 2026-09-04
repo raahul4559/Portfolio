@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { ChipRow, StatusChip } from "@/components/ui/bits";
+import { ChipRow, CtaButton, StatusChip } from "@/components/ui/bits";
 import { featuredProjects, profile, timeline, topSkills } from "@/content";
 
 /**
@@ -47,29 +47,16 @@ export function RecruiterView() {
         </p>
 
         <div className="mt-6 flex flex-wrap gap-3">
-          <a
-            href={profile.resume}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="border-accent bg-accent-tint text-text hover:bg-accent hover:text-bg inline-flex items-center gap-1 rounded-xs border px-4 py-2.5 font-mono text-data transition-colors duration-150"
-          >
+          <CtaButton href={profile.resume} primary external>
             Resume
-          </a>
-          <a
-            href={`mailto:${profile.email}`}
-            className="border-line-strong text-muted hover:text-text hover:bg-surface-2 hover:border-faint inline-flex items-center gap-1 rounded-xs border px-4 py-2.5 font-mono text-data transition-colors duration-150"
-          >
+          </CtaButton>
+          <CtaButton href={`mailto:${profile.email}`} external>
             Contact
-          </a>
+          </CtaButton>
           {github && (
-            <a
-              href={github.href}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="border-line-strong text-muted hover:text-text hover:bg-surface-2 hover:border-faint inline-flex items-center gap-1 rounded-xs border px-4 py-2.5 font-mono text-data transition-colors duration-150"
-            >
+            <CtaButton href={github.href} external>
               GitHub
-            </a>
+            </CtaButton>
           )}
         </div>
       </header>

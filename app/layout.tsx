@@ -4,6 +4,7 @@ import { Inter_Tight, JetBrains_Mono } from "next/font/google";
 import { Shell } from "@/components/os/Shell";
 import { profile } from "@/content";
 import { BOOT_KEY } from "@/lib/boot";
+import { SITE_URL } from "@/lib/site";
 import { THEME_KEY } from "@/lib/theme";
 
 import "./globals.css";
@@ -21,7 +22,7 @@ const data = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://example.com"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: `${profile.name} — ${profile.role}`,
     // Tabs in the browser read like documents in the OS: `projects — rahul.os`.

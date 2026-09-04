@@ -1,12 +1,12 @@
 "use client";
 
 import { X } from "lucide-react";
+import dynamic from "next/dynamic";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 import { ModuleView } from "@/components/modules/ModuleView";
 import { BootSequence } from "@/components/os/BootSequence";
-import { CommandPalette } from "@/components/os/CommandPalette";
 import { Explorer, MobileExplorer } from "@/components/os/Explorer";
 import { KeymapOverlay } from "@/components/os/KeymapOverlay";
 import { MobileBar, ModuleRail } from "@/components/os/ModuleRail";
@@ -14,10 +14,22 @@ import { Pane } from "@/components/os/Pane";
 import { StatusBar } from "@/components/os/StatusBar";
 import { SystemBar } from "@/components/os/SystemBar";
 import { TabBar, nextSplitTarget } from "@/components/os/TabBar";
-import { Terminal } from "@/components/os/Terminal";
 import { isTypingTarget, useMediaQuery } from "@/lib/hooks";
 import { describeRoute, isKnownRoute, moduleRoutes } from "@/lib/routes";
 import { useOS } from "@/lib/store";
+
+// Both are hidden until the visitor asks for them (⌘K, ⌘J, `) but were
+// costing every page load their full parse weight — cmdk included. Splitting
+// them into their own chunks keeps that weight off the critical path without
+// changing when or how either one appears.
+const CommandPalette = dynamic(
+  () => import("@/components/os/CommandPalette").then((m) => m.CommandPalette),
+  { ssr: false },
+);
+const Terminal = dynamic(
+  () => import("@/components/os/Terminal").then((m) => m.Terminal),
+  { ssr: false },
+);
 
 /**
  * The environment itself. Lives in the root layout so navigating between
