@@ -245,9 +245,13 @@
     border-right: 1px solid var(--border);
   }
 
+  /* A rendered "document" surface — command palette, code frame, log entry.
+     The doubled left edge is the OS's own frame mark: thicker than a card
+     border, plain (not accent — accent stays a state signal, not trim). */
   .layer {
     background: var(--surface);
     border: 1px solid var(--border-strong);
+    border-left-width: 2px;
     box-shadow: var(--shadow-layer);
   }
 

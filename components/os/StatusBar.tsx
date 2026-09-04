@@ -24,12 +24,12 @@ export function StatusBar({ activeRoute }: { activeRoute: string }) {
       className="hair-t hidden h-[var(--h-statusbar)] shrink-0 items-center gap-4 px-3 font-mono text-micro select-none md:flex"
     >
       <span className="text-muted flex items-center gap-1.5">
-        <span className="text-faint" aria-hidden>
-          ⎇
+        <span className="text-ok text-[8px] leading-none" aria-hidden>
+          ●
         </span>
-        main
-        <span className="text-ok" aria-label="clean working tree">
-          ✓
+        <span>main</span>
+        <span className="text-faint" aria-label="clean working tree">
+          · clean
         </span>
       </span>
 

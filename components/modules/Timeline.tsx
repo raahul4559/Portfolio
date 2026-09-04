@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { Document, DocumentHead } from "@/components/ui/Document";
-import { ChipRow } from "@/components/ui/bits";
+import { ChipRow, FrameBar } from "@/components/ui/bits";
 import { timeline } from "@/content";
 import type { TimelineEntry, TimelineKind } from "@/content/types";
 
@@ -85,25 +85,21 @@ function TimelineDetail({ entry }: { entry: TimelineEntry }) {
 
   return (
     <div key={entry.id} className="layer anim-fade overflow-hidden rounded-sm">
-      <div className="hair-b flex flex-wrap items-center gap-x-2.5 gap-y-1 px-4 py-2.5">
-        <span aria-hidden className="flex gap-1.5">
-          <span className="bg-line-strong size-[7px] rounded-full" />
-          <span className="bg-line-strong size-[7px] rounded-full" />
-          <span className="bg-line-strong size-[7px] rounded-full" />
-        </span>
-        <span className="text-faint font-mono text-micro">
-          git show {entry.from}
-          {present ? "..HEAD" : `..${entry.to}`}
-        </span>
-        <span className="text-faint font-mono text-micro">
-          · {KIND_LABEL[entry.kind]}
-        </span>
-        {entry.location && (
-          <span className="text-faint font-mono text-micro">
-            · {entry.location}
-          </span>
-        )}
-      </div>
+      <FrameBar
+        filename={`git show ${entry.from}${present ? "..HEAD" : `..${entry.to}`}`}
+        meta={
+          <>
+            <span className="text-faint font-mono text-micro">
+              · {KIND_LABEL[entry.kind]}
+            </span>
+            {entry.location && (
+              <span className="text-faint font-mono text-micro">
+                · {entry.location}
+              </span>
+            )}
+          </>
+        }
+      />
 
       <div className="px-5 py-5 sm:px-6">
         <h2 className="text-h3 text-text font-medium tracking-tight">

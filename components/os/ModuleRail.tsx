@@ -1,6 +1,5 @@
 "use client";
 
-import { Folder, Terminal } from "lucide-react";
 import Link from "next/link";
 
 import { modules } from "@/content";
@@ -120,7 +119,9 @@ export function MobileBar({ activeRoute }: { activeRoute: string }) {
           aria-hidden
           className={`h-0.5 w-5 ${explorerOpen ? "bg-accent" : "bg-transparent"}`}
         />
-        <Folder aria-hidden size={16} strokeWidth={1.75} />
+        <span aria-hidden className="label leading-none">
+          FS
+        </span>
       </button>
       <button
         type="button"
@@ -135,7 +136,9 @@ export function MobileBar({ activeRoute }: { activeRoute: string }) {
           aria-hidden
           className={`h-0.5 w-5 ${terminalOpen ? "bg-accent" : "bg-transparent"}`}
         />
-        <Terminal aria-hidden size={16} strokeWidth={1.75} />
+        <span aria-hidden className="label leading-none">
+          SH
+        </span>
       </button>
     </nav>
   );

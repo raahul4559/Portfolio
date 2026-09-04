@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 
@@ -158,14 +158,14 @@ function ExplorerTree({
               />
             )}
             {isDir ? (
-              <ChevronRight
+              <span
                 aria-hidden
-                size={13}
-                strokeWidth={2}
-                className={`text-faint shrink-0 transition-transform duration-150 ${
+                className={`text-faint block w-[13px] shrink-0 text-center font-mono text-[10px] leading-none transition-transform duration-150 ${
                   isExpanded ? "rotate-90" : ""
                 }`}
-              />
+              >
+                ▸
+              </span>
             ) : (
               <span aria-hidden className="w-[13px] shrink-0" />
             )}

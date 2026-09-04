@@ -2,12 +2,12 @@ import Link from "next/link";
 
 import { ProjectCode } from "@/components/modules/ProjectCode";
 import { Document, Section } from "@/components/ui/Document";
-import { CtaButton, StatusChip } from "@/components/ui/bits";
+import { CtaButton, FrameBar, StatusChip } from "@/components/ui/bits";
 import type { Project } from "@/content/types";
 
 /**
- * A project is a file, not a card — this is the same editor-chrome frame
- * used everywhere else code appears in the OS: traffic dots, a real
+ * A project is a file, not a card — this is the same rendered-document frame
+ * used everywhere else code appears in the OS: a `read-only` mark, a real
  * filename, line numbers, syntax highlighting. `ProjectCode` prints the
  * actual `Project` object; nothing below the fold says anything the object
  * itself doesn't already say, except the two things a code string can't
@@ -41,16 +41,7 @@ export function ProjectDetail({ project }: { project: Project }) {
       </header>
 
       <div className="layer overflow-hidden rounded-sm">
-        <div className="hair-b flex items-center gap-2.5 px-4 py-2.5">
-          <span aria-hidden className="flex gap-1.5">
-            <span className="bg-line-strong size-[7px] rounded-full" />
-            <span className="bg-line-strong size-[7px] rounded-full" />
-            <span className="bg-line-strong size-[7px] rounded-full" />
-          </span>
-          <span className="text-faint font-mono text-micro">
-            {project.slug}.ts
-          </span>
-        </div>
+        <FrameBar filename={`${project.slug}.ts`} />
         <div className="overflow-x-auto px-5 py-4">
           <ProjectCode project={project} />
         </div>

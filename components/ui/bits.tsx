@@ -174,6 +174,29 @@ export function CtaButton({
   );
 }
 
+/**
+ * Frame header for a rendered document (`ProjectCode`, a `git show` card).
+ * Real editors mark generated/derived views read-only rather than dressing
+ * the frame in decorative window controls — that's the fact this states.
+ * One shared header keeps every "this is a rendered file" surface in the OS
+ * speaking the same voice instead of hand-rolling window chrome per usage.
+ */
+export function FrameBar({
+  filename,
+  meta,
+}: {
+  filename: string;
+  meta?: ReactNode;
+}) {
+  return (
+    <div className="hair-b flex flex-wrap items-center gap-x-2.5 gap-y-1.5 px-4 py-2.5">
+      <Chip>ro</Chip>
+      <span className="text-faint font-mono text-micro">{filename}</span>
+      {meta}
+    </div>
+  );
+}
+
 /** Numbered index used down the left edge of lists. */
 export function Ordinal({ n }: { n: number }) {
   return (
