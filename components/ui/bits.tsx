@@ -124,11 +124,11 @@ export function ExternalLink({
 }
 
 /**
- * The bracket-style action button — `[ Label ]` — used only in the README
- * hero, where a recruiter needs the four highest-intent destinations
- * (Projects, Experience, Resume, Contact) without scrolling or learning the
- * OS metaphor first. `external` opens in a new tab rather than navigating
- * the workspace; everything else stays a real Next.js route.
+ * The bracket-style action button — `[ Label ]`. Used for the README hero's
+ * highest-intent destinations and for a project's Live/Source links — the
+ * two places a plain text link isn't assertive enough to be the obvious next
+ * click. `external` opens in a new tab rather than navigating the workspace;
+ * everything else stays a real Next.js route.
  */
 export function CtaButton({
   href,

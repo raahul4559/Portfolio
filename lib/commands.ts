@@ -237,7 +237,7 @@ const COMMANDS: CommandSpec[] = [
         type: "kv",
         rows: projects.map((p) => ({
           k: p.slug,
-          v: `${p.year}  ${p.tagline}`,
+          v: `${p.year}  ${p.description}`,
         })),
       },
       text("cat projects/<name> for the full write-up", "faint"),
@@ -398,17 +398,16 @@ function renderFile(kind: string, ref?: string): Block[] {
         {
           type: "card",
           title: project.name,
-          subtitle: project.tagline,
+          subtitle: project.role,
           rows: [
             { k: "year", v: project.year },
-            { k: "role", v: project.role },
             { k: "status", v: project.status },
-            { k: "stack", v: project.stack.join(" · ") },
+            { k: "technologies", v: project.technologies.join(" · ") },
           ],
-          body: project.summary,
+          body: project.description,
           route: `/projects/${project.slug}`,
         },
-        text(`open ${project.slug} for the full write-up`, "faint"),
+        text(`open ${project.slug} for the full source`, "faint"),
       ];
     }
 

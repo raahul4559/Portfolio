@@ -25,35 +25,40 @@ export interface OSModule {
 
 export type ProjectStatus = "live" | "archived" | "wip" | "internal";
 
-export interface ProjectLink {
-  label: string;
-  href: string;
-}
-
-export interface Metric {
-  value: string;
-  label: string;
-}
-
+/**
+ * Deliberately shaped to be printed almost verbatim as the file's own source
+ * — the project *is* this object; the UI never invents content the object
+ * doesn't have. Chrome-only facts (slug, year, status, featured) live outside
+ * it because a real config object wouldn't describe its own filename or the
+ * curation logic that lists it.
+ */
 export interface Project {
   slug: string;
-  name: string;
-  /** One line, shown on row hover in the projects table. */
-  tagline: string;
   year: string;
-  role: string;
   status: ProjectStatus;
   /** Featured projects surface in the README's "selected work". Keep to 3. */
   featured: boolean;
-  stack: string[];
-  /** One or two sentences. Used in listings and OG descriptions. */
-  summary: string;
-  context: string;
+
+  name: string;
+  /** One or two sentences. Doubles as the list-row blurb and OG description. */
+  description: string;
   problem: string;
-  approach: string[];
-  outcome: string;
-  metrics: Metric[];
-  links: ProjectLink[];
+  /** Ordered steps — how the problem was actually approached. */
+  solution: string[];
+  role: string;
+  technologies: string[];
+  /** What the thing does, from a user's seat — not how it was built. */
+  features: string[];
+  /** Concrete technical obstacles, not generic "it was hard." */
+  challenges: string[];
+  /** Outcomes with numbers where there are real numbers to give. */
+  results: string[];
+  /** Image paths. Empty is fine and renders an honest placeholder — never faked. */
+  screenshots: string[];
+  links: {
+    live?: string;
+    github?: string;
+  };
   /** Optional honesty note — what you'd do differently. Recruiters notice. */
   retro?: string;
 }

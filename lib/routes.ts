@@ -6,11 +6,11 @@ import { getProject, moduleByRoute, modules } from "@/content";
  * all describe a route the same way without each re-deriving it.
  */
 export interface RouteDescriptor {
-  /** Filename shown in the tab strip: `readme.md`, `relay.md`. */
+  /** Filename shown in the tab strip: `readme.md`, `relay.ts`. */
   file: string;
   /** Human label used in the palette and page title. */
   label: string;
-  /** Shell-style path shown in the status bar: `~/projects/relay.md`. */
+  /** Shell-style path shown in the status bar: `~/projects/relay.ts`. */
   path: string;
   /** Which rail module owns this route — drives the rail's active state. */
   moduleId: string;
@@ -33,9 +33,9 @@ export function describeRoute(route: string): RouteDescriptor {
     const slug = route.slice(PROJECTS_ROUTE.length + 1);
     const project = getProject(slug);
     return {
-      file: `${slug}.md`,
+      file: `${slug}.ts`,
       label: project?.name ?? slug,
-      path: `~/projects/${slug}.md`,
+      path: `~/projects/${slug}.ts`,
       moduleId: "projects",
     };
   }

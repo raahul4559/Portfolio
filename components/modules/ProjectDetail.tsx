@@ -1,23 +1,21 @@
 import Link from "next/link";
 
-import { Document, DocumentHead, Section } from "@/components/ui/Document";
-import {
-  ChipRow,
-  ExternalLink,
-  Metric,
-  MetaList,
-  StatusChip,
-} from "@/components/ui/bits";
+import { ProjectCode } from "@/components/modules/ProjectCode";
+import { Document, Section } from "@/components/ui/Document";
+import { CtaButton, StatusChip } from "@/components/ui/bits";
 import type { Project } from "@/content/types";
 
 /**
- * The case study. Ordered the way the work actually happened — context, then
- * the problem, then what was tried, then what came out of it — rather than as
- * a feature tour.
+ * A project is a file, not a card — this is the same editor-chrome frame
+ * used everywhere else code appears in the OS: traffic dots, a real
+ * filename, line numbers, syntax highlighting. `ProjectCode` prints the
+ * actual `Project` object; nothing below the fold says anything the object
+ * itself doesn't already say, except the two things a code string can't
+ * do — show an image, or be a clickable link.
  */
 export function ProjectDetail({ project }: { project: Project }) {
   return (
-    <Document>
+    <Document wide>
       <Link
         href="/projects"
         className="text-faint hover:text-text mb-8 inline-flex items-baseline gap-1.5 font-mono text-micro transition-colors duration-150"
@@ -26,79 +24,95 @@ export function ProjectDetail({ project }: { project: Project }) {
         projects/
       </Link>
 
-      <DocumentHead
-        eyebrow={`projects/${project.slug}.md`}
-        title={project.name}
-        summary={project.summary}
-        aside={<StatusChip status={project.status} />}
-      />
+      <header className="anim-rise mb-8">
+        <p className="label text-faint mb-3">
+          projects/{project.slug}.ts
+        </p>
+        <h1 className="text-h1 sm:text-display text-text font-medium tracking-[-0.02em] text-balance">
+          {project.name}
+        </h1>
+        <p className="text-ui text-faint mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono">
+          <span>{project.role}</span>
+          <span aria-hidden>·</span>
+          <StatusChip status={project.status} />
+          <span aria-hidden>·</span>
+          <span className="tnum">{project.year}</span>
+        </p>
+      </header>
 
-      <Section label="metadata">
-        <MetaList
-          items={[
-            { key: "year", value: project.year },
-            { key: "role", value: project.role },
-            { key: "stack", value: <ChipRow items={project.stack} /> },
-          ]}
-        />
-      </Section>
+      <div className="layer overflow-hidden rounded-sm">
+        <div className="hair-b flex items-center gap-2.5 px-4 py-2.5">
+          <span aria-hidden className="flex gap-1.5">
+            <span className="bg-line-strong size-[7px] rounded-full" />
+            <span className="bg-line-strong size-[7px] rounded-full" />
+            <span className="bg-line-strong size-[7px] rounded-full" />
+          </span>
+          <span className="text-faint font-mono text-micro">
+            {project.slug}.ts
+          </span>
+        </div>
+        <div className="overflow-x-auto px-5 py-4">
+          <ProjectCode project={project} />
+        </div>
+      </div>
 
-      {project.metrics.length > 0 && (
-        <Section label="outcome in numbers" count={project.metrics.length}>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-            {project.metrics.map((metric) => (
-              <Metric key={metric.label} {...metric} />
-            ))}
+      <Section label="preview">
+        <ScreenshotStrip screenshots={project.screenshots} name={project.name} />
+
+        {(project.links.live || project.links.github) && (
+          <div className="mt-5 flex flex-wrap gap-3">
+            {project.links.live && (
+              <CtaButton href={project.links.live} primary external>
+                Live Demo
+              </CtaButton>
+            )}
+            {project.links.github && (
+              <CtaButton href={project.links.github} external>
+                Source
+              </CtaButton>
+            )}
           </div>
-        </Section>
-      )}
-
-      <Section label="context">
-        <p className="prose-os text-pretty">{project.context}</p>
+        )}
       </Section>
-
-      <Section label="problem">
-        <p className="prose-os text-pretty">{project.problem}</p>
-      </Section>
-
-      <Section label="approach" count={project.approach.length}>
-        <ol className="space-y-4">
-          {project.approach.map((step, i) => (
-            <li key={step.slice(0, 24)} className="flex gap-4">
-              <span className="text-faint tnum shrink-0 pt-[0.3em] font-mono text-micro">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <p className="prose-os text-pretty">{step}</p>
-            </li>
-          ))}
-        </ol>
-      </Section>
-
-      <Section label="result">
-        <p className="prose-os text-pretty">{project.outcome}</p>
-      </Section>
-
-      {project.retro && (
-        <Section label="what I'd do differently">
-          {/* The accent edge is the one visual emphasis in a case study — it
-              marks the paragraph most readers skip to. */}
-          <blockquote className="border-accent border-l-2 pl-5">
-            <p className="prose-os text-pretty">{project.retro}</p>
-          </blockquote>
-        </Section>
-      )}
-
-      {project.links.length > 0 && (
-        <Section label="links">
-          <ul className="space-y-3">
-            {project.links.map((link) => (
-              <li key={link.label}>
-                <ExternalLink href={link.href}>{link.label}</ExternalLink>
-              </li>
-            ))}
-          </ul>
-        </Section>
-      )}
     </Document>
+  );
+}
+
+/**
+ * Real screenshots slot in here the moment they exist — no filler renders
+ * meanwhile. The empty state says so plainly instead of shipping a broken
+ * `<img>` or a stock placeholder that pretends to be a product shot.
+ *
+ * Plain `<img>` on purpose: these are arbitrary-aspect-ratio shots the user
+ * drops in later, and next/image's fixed pipeline buys nothing for content
+ * that doesn't exist yet.
+ */
+function ScreenshotStrip({
+  screenshots,
+  name,
+}: {
+  screenshots: string[];
+  name: string;
+}) {
+  if (screenshots.length === 0) {
+    return (
+      <div className="border-line text-faint flex h-40 items-center justify-center rounded-sm border border-dashed font-mono text-micro">
+        no screenshots yet
+      </div>
+    );
+  }
+
+  return (
+    <div className="no-scrollbar flex gap-3 overflow-x-auto">
+      {screenshots.map((src, i) => (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          key={src}
+          src={src}
+          alt={`${name} — screenshot ${i + 1}`}
+          className="border-line-strong h-40 w-auto shrink-0 rounded-sm border object-cover"
+        />
+      ))}
+    </div>
   );
 }

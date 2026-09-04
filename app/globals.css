@@ -26,6 +26,19 @@
   --shadow-layer: 0 8px 24px rgb(0 0 0 / 0.5);
   --scrollbar: #2a2a2a;
   --scrollbar-hover: #3a3a3a;
+
+  /* Syntax highlighting — one formula (same saturation/lightness band, hue
+     is the only thing that changes) so the palette reads as one family.
+     Keywords break the formula on purpose and take the signature accent;
+     variables stay undecorated in the default text color. */
+  --syn-keyword: var(--accent);
+  --syn-string: hsl(100 30% 68%);
+  --syn-function: hsl(205 42% 72%);
+  --syn-type: hsl(172 30% 62%);
+  --syn-number: hsl(350 38% 74%);
+  --syn-variable: var(--text);
+  --syn-comment: var(--faint);
+  --syn-punct: var(--muted);
   color-scheme: dark;
 }
 
@@ -48,6 +61,15 @@
   --shadow-layer: 0 8px 24px rgb(19 19 19 / 0.13);
   --scrollbar: #d2d2cc;
   --scrollbar-hover: #b8b8b0;
+
+  --syn-keyword: var(--accent);
+  --syn-string: hsl(100 35% 30%);
+  --syn-function: hsl(205 48% 36%);
+  --syn-type: hsl(172 38% 28%);
+  --syn-number: hsl(350 42% 38%);
+  --syn-variable: var(--text);
+  --syn-comment: var(--faint);
+  --syn-punct: var(--muted);
   color-scheme: light;
 }
 
@@ -67,6 +89,15 @@
   --color-ok: var(--ok);
   --color-warn: var(--warn);
   --color-err: var(--err);
+
+  --color-syn-keyword: var(--syn-keyword);
+  --color-syn-string: var(--syn-string);
+  --color-syn-function: var(--syn-function);
+  --color-syn-type: var(--syn-type);
+  --color-syn-number: var(--syn-number);
+  --color-syn-variable: var(--syn-variable);
+  --color-syn-comment: var(--syn-comment);
+  --color-syn-punct: var(--syn-punct);
 
   --font-sans: var(--font-ui), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-data), ui-monospace, SFMono-Regular, monospace;

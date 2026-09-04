@@ -11,6 +11,13 @@ export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));
 }
 
+/** OG real estate is a teaser, not the full case study — first sentence only. */
+function teaser(description: string, max = 110): string {
+  const firstSentence = description.split(/(?<=\.)\s/)[0] ?? description;
+  if (firstSentence.length <= max) return firstSentence;
+  return `${firstSentence.slice(0, max).trimEnd()}…`;
+}
+
 const INK = {
   bg: "#0e0e0e",
   text: "#ededed",
@@ -23,8 +30,8 @@ const INK = {
 
 /**
  * Per-project share card. Same frame as the site default, but carries the
- * project's own name, tagline, and stack — so a link posted for one project
- * doesn't read as generic portfolio noise in a feed.
+ * project's own name, description, and stack — so a link posted for one
+ * project doesn't read as generic portfolio noise in a feed.
  */
 export default async function Image({
   params,
@@ -61,7 +68,7 @@ export default async function Image({
           }}
         >
           <span style={{ color: INK.muted }}>{profile.host}</span>
-          <span>/projects/{slug}.md</span>
+          <span>/projects/{slug}.ts</span>
         </div>
 
         <div
@@ -98,7 +105,7 @@ export default async function Image({
             )}
           </div>
           <div style={{ display: "flex", fontSize: 32, color: INK.muted }}>
-            {project?.tagline ?? "Project write-up"}
+            {project ? teaser(project.description) : "Project write-up"}
           </div>
         </div>
 
@@ -112,7 +119,7 @@ export default async function Image({
           }}
         >
           <div style={{ display: "flex", gap: 12 }}>
-            {(project?.stack ?? []).slice(0, 4).map((tech) => (
+            {(project?.technologies ?? []).slice(0, 4).map((tech) => (
               <div
                 key={tech}
                 style={{

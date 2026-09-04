@@ -8,7 +8,7 @@ export function ProjectsModule() {
       <DocumentHead
         eyebrow="projects/"
         title="Selected work"
-        summary="Each of these has a write-up covering what the problem actually was, what I tried, and — where it applies — what I would do differently. The feature list is the least interesting part."
+        summary="Each of these opens as a real source file — the object you're reading is the actual content, not a summary of it. Covers what the problem actually was, what I tried, and what came out of it."
         aside={
           <span className="text-micro text-faint tnum font-mono">
             {projects.length} entries

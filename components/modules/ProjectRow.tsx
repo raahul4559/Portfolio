@@ -4,11 +4,12 @@ import type { Project } from "@/content/types";
 import { ChipRow, Ordinal, StatusChip } from "@/components/ui/bits";
 
 /**
- * One project as a row. Shared by the README's selected work and the projects
- * index so the two can never describe the same project differently.
+ * One project as a row — styled like a file listing, because that's what it
+ * is. Shared by the README's selected work and the projects index so the two
+ * can never describe the same project differently.
  *
- * The tagline stays visible rather than appearing on hover — a list you have
- * to hover to read is a list you can't scan.
+ * The description stays visible rather than appearing on hover — a list you
+ * have to hover to read is a list you can't scan.
  */
 export function ProjectRow({ project, n }: { project: Project; n: number }) {
   return (
@@ -21,7 +22,9 @@ export function ProjectRow({ project, n }: { project: Project; n: number }) {
       </span>
 
       <div className="min-w-0">
-        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <p className="text-micro text-faint font-mono">{project.slug}.ts</p>
+
+        <div className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
           <h3 className="text-h3 text-text decoration-transparent group-hover:decoration-accent font-medium tracking-tight underline decoration-1 underline-offset-4 transition-colors duration-150">
             {project.name}
           </h3>
@@ -29,11 +32,11 @@ export function ProjectRow({ project, n }: { project: Project; n: number }) {
         </div>
 
         <p className="text-ui text-muted mt-1.5 max-w-[54ch] text-pretty">
-          {project.tagline}
+          {project.description}
         </p>
 
         <div className="mt-3">
-          <ChipRow items={project.stack} />
+          <ChipRow items={project.technologies} />
         </div>
       </div>
 
