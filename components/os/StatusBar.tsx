@@ -13,6 +13,8 @@ export function StatusBar({ activeRoute }: { activeRoute: string }) {
   const terminalOpen = useOS((s) => s.terminalOpen);
   const toggleTerminal = useOS((s) => s.toggleTerminal);
   const toggleKeymap = useOS((s) => s.toggleKeymap);
+  const explorerOpen = useOS((s) => s.explorerOpen);
+  const toggleExplorer = useOS((s) => s.toggleExplorer);
 
   const { path } = describeRoute(activeRoute);
 
@@ -38,6 +40,12 @@ export function StatusBar({ activeRoute }: { activeRoute: string }) {
       </span>
 
       <div className="ml-auto flex items-center gap-1">
+        <StatusAction
+          onClick={toggleExplorer}
+          keys="⌘B"
+          label="explorer"
+          active={explorerOpen}
+        />
         <StatusAction onClick={toggleKeymap} keys="?" label="keys" />
         <StatusAction
           onClick={toggleTerminal}

@@ -1,5 +1,6 @@
 "use client";
 
+import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 
@@ -79,9 +80,9 @@ export function TabBar({ activeRoute }: { activeRoute: string }) {
                   e.stopPropagation();
                   handleClose(route);
                 }}
-                className="text-faint hover:text-text hover:bg-surface-3 flex size-4 items-center justify-center rounded-xs text-[13px] leading-none opacity-0 transition-opacity duration-150 group-hover:opacity-100 focus-visible:opacity-100"
+                className="text-faint hover:text-text hover:bg-surface-3 flex size-4 items-center justify-center rounded-xs opacity-0 transition-opacity duration-150 group-hover:opacity-100 focus-visible:opacity-100"
               >
-                ×
+                <X aria-hidden size={11} strokeWidth={2} />
               </span>
             </a>
           );

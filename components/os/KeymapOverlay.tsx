@@ -1,5 +1,6 @@
 "use client";
 
+import { X } from "lucide-react";
 import { useEffect, useRef } from "react";
 
 import { modules } from "@/content";
@@ -16,6 +17,7 @@ const GROUPS: { label: string; bindings: Binding[] }[] = [
     bindings: [
       { keys: ["1", "–", String(modules.length)], action: "Jump to module" },
       { keys: ["⌘", "K"], action: "Command palette" },
+      { keys: ["⌘", "B"], action: "Toggle file explorer" },
       { keys: ["⌥", "W"], action: "Close current tab" },
       { keys: ["⌘", "\\"], action: "Toggle split view" },
     ],
@@ -75,9 +77,9 @@ export function KeymapOverlay() {
           type="button"
           onClick={() => setOpen(false)}
           aria-label="Close"
-          className="text-faint hover:text-text hover:bg-surface-2 flex size-6 items-center justify-center rounded-xs text-[13px] leading-none transition-colors duration-150"
+          className="text-faint hover:text-text hover:bg-surface-2 flex size-6 items-center justify-center rounded-xs transition-colors duration-150"
         >
-          ×
+          <X aria-hidden size={13} strokeWidth={2} />
         </button>
       </div>
 

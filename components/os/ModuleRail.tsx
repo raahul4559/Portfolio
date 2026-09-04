@@ -76,6 +76,7 @@ export function ModuleRail({ activeRoute }: { activeRoute: string }) {
 export function MobileBar({ activeRoute }: { activeRoute: string }) {
   const activeModule = describeRoute(activeRoute).moduleId;
   const toggleTerminal = useOS((s) => s.toggleTerminal);
+  const toggleExplorer = useOS((s) => s.toggleExplorer);
 
   return (
     <nav
@@ -101,6 +102,15 @@ export function MobileBar({ activeRoute }: { activeRoute: string }) {
           </Link>
         );
       })}
+      <button
+        type="button"
+        onClick={toggleExplorer}
+        aria-label="Open file explorer"
+        className="hair-l text-faint flex w-14 flex-col items-center justify-center gap-1"
+      >
+        <span aria-hidden className="h-0.5 w-5 bg-transparent" />
+        <span className="text-micro font-mono tracking-wide">files</span>
+      </button>
       <button
         type="button"
         onClick={toggleTerminal}

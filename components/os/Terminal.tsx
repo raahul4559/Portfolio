@@ -1,5 +1,6 @@
 "use client";
 
+import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -12,7 +13,7 @@ import {
   type Block,
   type Tone,
 } from "@/lib/commands";
-import { openExternal } from "@/lib/dom";
+import { navigateOrOpen } from "@/lib/dom";
 import { commonPrefix, completePath } from "@/lib/fs";
 import { useMediaQuery } from "@/lib/hooks";
 import {
@@ -105,10 +106,7 @@ export function Terminal() {
         cwd,
         history,
         setCwd,
-        navigate: (route) => {
-          if (route.startsWith("/") && !route.endsWith(".pdf")) router.push(route);
-          else openExternal(route);
-        },
+        navigate: (route) => navigateOrOpen(router.push, route),
         setTheme,
         clear: () => {
           cleared = true;
@@ -268,9 +266,9 @@ export function Terminal() {
             type="button"
             onClick={() => setOpen(false)}
             aria-label="Close terminal"
-            className="text-faint hover:text-text hover:bg-surface-2 flex size-6 items-center justify-center rounded-xs text-[13px] leading-none transition-colors duration-150"
+            className="text-faint hover:text-text hover:bg-surface-2 flex size-6 items-center justify-center rounded-xs transition-colors duration-150"
           >
-            ×
+            <X aria-hidden size={13} strokeWidth={2} />
           </button>
         </div>
       </header>

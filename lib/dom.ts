@@ -14,6 +14,20 @@ export function openExternal(href: string): void {
   window.open(href, "_blank", "noopener");
 }
 
+/**
+ * A "route" in this app is sometimes a real Next.js route and sometimes a
+ * static asset (`/resume.pdf`) that should open as its own tab instead of
+ * navigating the workspace. The Explorer, the terminal, and anything else
+ * that opens a virtual-filesystem entry all need this same one decision.
+ */
+export function navigateOrOpen(
+  push: (route: string) => void,
+  route: string,
+): void {
+  if (route.startsWith("/") && !route.endsWith(".pdf")) push(route);
+  else openExternal(route);
+}
+
 export function openMailto(email: string): void {
   window.location.href = `mailto:${email}`;
 }

@@ -1,11 +1,13 @@
 "use client";
 
+import { X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 import { ModuleView } from "@/components/modules/ModuleView";
 import { BootSequence } from "@/components/os/BootSequence";
 import { CommandPalette } from "@/components/os/CommandPalette";
+import { Explorer, MobileExplorer } from "@/components/os/Explorer";
 import { KeymapOverlay } from "@/components/os/KeymapOverlay";
 import { MobileBar, ModuleRail } from "@/components/os/ModuleRail";
 import { Pane } from "@/components/os/Pane";
@@ -58,6 +60,12 @@ export function Shell({ children }: { children: React.ReactNode }) {
         return;
       }
 
+      if (mod && event.key.toLowerCase() === "b") {
+        event.preventDefault();
+        os.toggleExplorer();
+        return;
+      }
+
       if (mod && event.key === "\\") {
         event.preventDefault();
         os.setSplitRoute(
@@ -83,6 +91,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
       if (event.key === "Escape") {
         if (os.keymapOpen) return os.setKeymapOpen(false);
         if (os.terminalOpen) return os.setTerminalOpen(false);
+        if (os.explorerOpen) return os.setExplorerOpen(false);
         return;
       }
 
@@ -130,6 +139,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
       <div className="flex min-h-0 flex-1">
         <ModuleRail activeRoute={pathname} />
+        <Explorer activeRoute={pathname} />
 
         <main className="relative flex min-w-0 flex-1 flex-col">
           <TabBar activeRoute={pathname} />
@@ -155,6 +165,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
       <StatusBar activeRoute={pathname} />
       <MobileBar activeRoute={pathname} />
+      <MobileExplorer activeRoute={pathname} />
 
       <CommandPalette />
       <KeymapOverlay />
@@ -175,9 +186,9 @@ function SplitHeader({ route }: { route: string }) {
         type="button"
         onClick={() => setSplitRoute(null)}
         aria-label="Close split view"
-        className="text-faint hover:text-text hover:bg-surface-3 flex size-5 items-center justify-center rounded-xs text-[13px] leading-none transition-colors duration-150"
+        className="text-faint hover:text-text hover:bg-surface-3 flex size-5 items-center justify-center rounded-xs transition-colors duration-150"
       >
-        ×
+        <X aria-hidden size={12} strokeWidth={2} />
       </button>
     </div>
   );

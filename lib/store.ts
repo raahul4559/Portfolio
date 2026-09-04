@@ -22,7 +22,12 @@ interface PersistedWorkspace {
   railOpen?: boolean;
   tabs?: string[];
   terminalHeight?: number;
+  explorerOpen?: boolean;
+  expandedDirs?: string[];
 }
+
+/** Open by default so the tree isn't a single collapsed row on first visit. */
+const DEFAULT_EXPANDED_DIRS = ["~/projects"];
 
 export interface OSState {
   hydrated: boolean;
@@ -41,6 +46,11 @@ export interface OSState {
 
   /** Secondary pane content. Null when the pane is a single view. */
   splitRoute: string | null;
+
+  /** Desktop: a side panel. Mobile: a full-screen sheet. Same boolean either way. */
+  explorerOpen: boolean;
+  /** Directory paths (`~/projects`) currently expanded in the tree. */
+  expandedDirs: string[];
 
   hydrate: () => void;
   setTheme: (theme: Theme) => void;
@@ -63,6 +73,10 @@ export interface OSState {
   toggleKeymap: () => void;
 
   setSplitRoute: (route: string | null) => void;
+
+  setExplorerOpen: (open: boolean) => void;
+  toggleExplorer: () => void;
+  toggleDir: (path: string) => void;
 }
 
 export const TERMINAL_MIN = 160;
@@ -84,6 +98,8 @@ function writeWorkspace(state: OSState) {
       railOpen: state.railOpen,
       tabs: state.tabs,
       terminalHeight: state.terminalHeight,
+      explorerOpen: state.explorerOpen,
+      expandedDirs: state.expandedDirs,
     };
     localStorage.setItem(WORKSPACE_KEY, JSON.stringify(payload));
   } catch {
@@ -117,6 +133,9 @@ export const useOS = create<OSState>((set, get) => ({
 
   splitRoute: null,
 
+  explorerOpen: false,
+  expandedDirs: DEFAULT_EXPANDED_DIRS,
+
   hydrate: () => {
     if (get().hydrated) return;
     const saved = readWorkspace();
@@ -126,6 +145,8 @@ export const useOS = create<OSState>((set, get) => ({
       theme: domTheme === "paper" ? "paper" : "ink",
       railOpen: saved.railOpen ?? false,
       terminalHeight: saved.terminalHeight ?? TERMINAL_DEFAULT,
+      explorerOpen: saved.explorerOpen ?? false,
+      expandedDirs: saved.expandedDirs ?? DEFAULT_EXPANDED_DIRS,
       // Merge saved tabs behind whatever route we actually landed on, so a
       // deep link is always the active tab even on a restored workspace.
       tabs: dedupe([get().activeRoute, ...(saved.tabs ?? [])]),
@@ -189,6 +210,21 @@ export const useOS = create<OSState>((set, get) => ({
   toggleKeymap: () => set({ keymapOpen: !get().keymapOpen }),
 
   setSplitRoute: (route) => set({ splitRoute: route }),
+
+  setExplorerOpen: (open) => {
+    set({ explorerOpen: open });
+    writeWorkspace(get());
+  },
+  toggleExplorer: () => get().setExplorerOpen(!get().explorerOpen),
+
+  toggleDir: (path) => {
+    const { expandedDirs } = get();
+    const next = expandedDirs.includes(path)
+      ? expandedDirs.filter((d) => d !== path)
+      : [...expandedDirs, path];
+    set({ expandedDirs: next });
+    writeWorkspace(get());
+  },
 }));
 
 function dedupe(values: string[]): string[] {
