@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ProjectRow } from "@/components/modules/ProjectRow";
 import { Document, Section } from "@/components/ui/Document";
 import { CtaButton, MetaList } from "@/components/ui/bits";
-import { featuredProjects, profile, projects } from "@/content";
+import { featuredProjects, githubProfile, profile, projects } from "@/content";
 import { SHELL_USER } from "@/lib/commands";
 
 export function ReadmeModule() {
@@ -62,6 +62,43 @@ export function ReadmeModule() {
           .
         </p>
       </header>
+
+      <Section label="github">
+        <div className="flex items-center gap-4">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={githubProfile.avatarUrl}
+            alt=""
+            width={56}
+            height={56}
+            className="border-line-strong shrink-0 rounded-full border"
+          />
+          <div className="min-w-0">
+            <a
+              href={githubProfile.htmlUrl}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="text-text hover:text-accent font-mono text-data transition-colors duration-150"
+            >
+              @{githubProfile.login}
+            </a>
+            <p className="text-ui text-muted mt-0.5 text-pretty">
+              {githubProfile.bio ?? profile.positioning}
+            </p>
+          </div>
+        </div>
+        <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 font-mono text-micro">
+          <span className="text-muted">
+            <span className="text-text tnum">{githubProfile.publicRepos}</span> repositories
+          </span>
+          <span className="text-muted">
+            <span className="text-text tnum">{githubProfile.followers}</span> followers
+          </span>
+          <span className="text-muted">
+            <span className="text-text tnum">{githubProfile.following}</span> following
+          </span>
+        </div>
+      </Section>
 
       <Section label="whoami">
         <MetaList

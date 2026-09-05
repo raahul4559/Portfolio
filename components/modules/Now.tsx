@@ -1,6 +1,7 @@
 import { Document, Section } from "@/components/ui/Document";
 import { ExternalLink } from "@/components/ui/bits";
-import { now, profile } from "@/content";
+import { activityStats, now, profile } from "@/content";
+import type { ActivityStats } from "@/content/types";
 import { SHELL_USER } from "@/lib/commands";
 
 /**
@@ -109,9 +110,55 @@ export function NowModule() {
         </ul>
       </Section>
 
+      {activityStats && (
+        <Section label="developer activity">
+          <p className="text-h2 text-text mb-4 font-mono font-medium">{activityStats.year}</p>
+          <ActivityBars stats={activityStats} />
+          <p className="text-faint mt-3 font-mono text-micro">
+            Real contribution totals from GitHub — a reinterpretation of the
+            calendar graph, not a copy of it.
+          </p>
+        </Section>
+      )}
+
       <Section label="note">
         <p className="prose-os text-pretty">{now.note}</p>
       </Section>
     </Document>
+  );
+}
+
+/**
+ * A stylized reading of GitHub's own numbers, not its contribution graph —
+ * see the docstring on `ActivityStats`. Monochrome bars on purpose, same
+ * reasoning as `LevelBlocks`: a colored chart implies a precision four rough
+ * buckets of real activity don't actually have.
+ */
+function ActivityBars({ stats }: { stats: ActivityStats }) {
+  const rows = [
+    { label: "Projects", value: stats.reposActive },
+    { label: "Commits", value: stats.totalCommits },
+    { label: "Open Source", value: stats.totalPRs + stats.totalReviews },
+    { label: "Experiments", value: stats.totalIssues },
+  ];
+  const max = Math.max(...rows.map((r) => r.value), 1);
+  const WIDTH = 24;
+
+  return (
+    <dl className="space-y-2.5 font-mono text-data">
+      {rows.map((row) => {
+        const filled = Math.round((row.value / max) * WIDTH);
+        return (
+          <div key={row.label} className="flex items-center gap-3">
+            <dt className="text-muted w-28 shrink-0">{row.label}</dt>
+            <dd aria-hidden className="flex-1 leading-none tracking-tighter">
+              <span className="text-text">{"█".repeat(filled)}</span>
+              <span className="text-line-strong">{"░".repeat(WIDTH - filled)}</span>
+            </dd>
+            <dd className="text-faint tnum w-8 shrink-0 text-right text-micro">{row.value}</dd>
+          </div>
+        );
+      })}
+    </dl>
   );
 }

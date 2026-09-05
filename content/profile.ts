@@ -35,7 +35,7 @@ export const profile: Profile = {
     responseTime: "usually within a day",
   },
 
-  email: "avigupta2001ad@gmail.com",
+  email: "rahuln984282@gmail.com",
   resume: "/resume.pdf",
 
   socials: [

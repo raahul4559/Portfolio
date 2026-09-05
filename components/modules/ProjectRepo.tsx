@@ -114,6 +114,18 @@ export function ProjectRepo({ project }: { project: Project }) {
           <span className="text-faint tnum font-mono text-micro">
             {FILES.length} files
           </span>
+          {project.github && (
+            <>
+              <Dot />
+              <span className="text-faint tnum font-mono text-micro">
+                ★ {project.github.stars}
+              </span>
+              <Dot />
+              <span className="text-faint tnum font-mono text-micro">
+                ⑂ {project.github.forks}
+              </span>
+            </>
+          )}
         </div>
 
         <div className="md:flex">

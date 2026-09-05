@@ -12,51 +12,63 @@ import type { Project } from "@/content/types";
 export function ProjectReadme({ project }: { project: Project }) {
   return (
     <div>
-      <Section label="problem">
-        <p className="prose-os text-pretty">{project.problem}</p>
+      {project.problem && (
+        <Section label="problem">
+          <p className="prose-os text-pretty">{project.problem}</p>
+        </Section>
+      )}
+
+      {project.solution.length > 0 && (
+        <Section label="solution">
+          <ol className="space-y-2.5">
+            {project.solution.map((step, i) => (
+              <li key={step.slice(0, 24)} className="flex gap-3">
+                <span className="text-faint tnum shrink-0 pt-[0.15em] font-mono text-micro">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <p className="prose-os text-pretty">{step}</p>
+              </li>
+            ))}
+          </ol>
+        </Section>
+      )}
+
+      <Section label="features">
+        {project.features.length > 0 ? (
+          <ul className="space-y-2.5">
+            {project.features.map((feature) => (
+              <li key={feature.slice(0, 24)} className="flex gap-3">
+                <span
+                  aria-hidden
+                  className="text-faint mt-[0.5em] text-[8px] leading-none"
+                >
+                  ▸
+                </span>
+                <p className="prose-os text-pretty">{feature}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-faint font-mono text-micro">
+            No feature list found in the README.
+          </p>
+        )}
       </Section>
 
-      <Section label="solution">
-        <ol className="space-y-2.5">
-          {project.solution.map((step, i) => (
-            <li key={step.slice(0, 24)} className="flex gap-3">
-              <span className="text-faint tnum shrink-0 pt-[0.15em] font-mono text-micro">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <p className="prose-os text-pretty">{step}</p>
-            </li>
-          ))}
-        </ol>
-      </Section>
-
-      <Section label="features" count={project.features.length}>
-        <ul className="space-y-2.5">
-          {project.features.map((feature) => (
-            <li key={feature.slice(0, 24)} className="flex gap-3">
-              <span
-                aria-hidden
-                className="text-faint mt-[0.5em] text-[8px] leading-none"
+      {project.results.length > 0 && (
+        <Section label="results" count={project.results.length}>
+          <ul className="grid gap-2.5 sm:grid-cols-2">
+            {project.results.map((result) => (
+              <li
+                key={result.slice(0, 24)}
+                className="border-line rounded-xs border px-3 py-2.5"
               >
-                ▸
-              </span>
-              <p className="prose-os text-pretty">{feature}</p>
-            </li>
-          ))}
-        </ul>
-      </Section>
-
-      <Section label="results" count={project.results.length}>
-        <ul className="grid gap-2.5 sm:grid-cols-2">
-          {project.results.map((result) => (
-            <li
-              key={result.slice(0, 24)}
-              className="border-line rounded-xs border px-3 py-2.5"
-            >
-              <p className="text-ui text-muted text-pretty">{result}</p>
-            </li>
-          ))}
-        </ul>
-      </Section>
+                <p className="text-ui text-muted text-pretty">{result}</p>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
 
       <Section label="stack" count={project.technologies.length}>
         <ChipRow items={project.technologies} />

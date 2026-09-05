@@ -1,18 +1,33 @@
+import { githubProjects } from "./github.generated";
 import { modules } from "./modules";
 import { now } from "./now";
 import { profile } from "./profile";
-import { projects } from "./projects";
 import { stack, stackItemCount } from "./stack";
 import { timeline } from "./timeline";
-import type { IndexEntry, VDir, VNode } from "./types";
+import type { IndexEntry, Project, VDir, VNode } from "./types";
 
 export * from "./types";
 export { modules, moduleByRoute, moduleById } from "./modules";
 export { now } from "./now";
 export { profile } from "./profile";
-export { projects, featuredProjects, getProject } from "./projects";
 export { stack, stackItemCount } from "./stack";
 export { timeline } from "./timeline";
+export { activityStats, githubProfile } from "./github.generated";
+
+/**
+ * Every project on the site — real GitHub repositories, synced at build
+ * time by `scripts/sync-github.ts`. There is no hand-written fallback list:
+ * once real data exists, showing anything else would be showing something
+ * false. See content/featured.ts to control which repos headline the site,
+ * and content/project-stories.ts to give one a real narrative.
+ */
+export const projects: Project[] = githubProjects;
+
+export const featuredProjects = projects.filter((p) => p.featured);
+
+export function getProject(slug: string): Project | undefined {
+  return projects.find((p) => p.slug === slug);
+}
 
 /**
  * The recruiter/quick-view page's skill chips — derived from the same honest

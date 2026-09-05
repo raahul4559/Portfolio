@@ -24,6 +24,30 @@ function buildLines(project: Project): ReactNode[] {
   push(indent(1, <><Str value="status" /><Pn>: </Pn><Str value={project.status} /><Pn>,</Pn></>));
   push(indent(1, <><Str value="year" /><Pn>: </Pn><Str value={project.year} /><Pn>,</Pn></>));
 
+  if (project.github) {
+    const { stars, forks, license, topics } = project.github;
+    push(indent(1, <><Str value="stars" /><Pn>: </Pn><Pn>{String(stars)}</Pn><Pn>,</Pn></>));
+    push(indent(1, <><Str value="forks" /><Pn>: </Pn><Pn>{String(forks)}</Pn><Pn>,</Pn></>));
+    if (license) {
+      push(indent(1, <><Str value="license" /><Pn>: </Pn><Str value={license} /><Pn>,</Pn></>));
+    }
+    if (topics.length > 0) {
+      push(indent(1, <><Str value="topics" /><Pn>: [</Pn></>));
+      topics.forEach((topic, i) =>
+        push(
+          indent(
+            2,
+            <>
+              <Str value={topic} />
+              <Pn>{i === topics.length - 1 ? "" : ","}</Pn>
+            </>,
+          ),
+        ),
+      );
+      push(indent(1, <Pn>{"],"}</Pn>));
+    }
+  }
+
   push(indent(1, <><Str value="dependencies" /><Pn>: {"{"}</Pn></>));
   project.technologies.forEach((tech, i) => {
     const last = i === project.technologies.length - 1;
