@@ -34,15 +34,27 @@ interface Section {
   body: string[];
 }
 
+/**
+ * Whichever heading comes first — `#` or `##`, READMEs use both for their
+ * own title — is treated as the title and dropped, not sectioned on: the
+ * overview lives right after it, before the first *real* heading, and
+ * sectioning on the title itself would leave that overview with nothing
+ * captured ahead of it.
+ */
 function splitSections(md: string): Section[] {
   const sections: Section[] = [{ heading: "", body: [] }];
+  let titleSkipped = false;
   for (const line of md.split("\n")) {
-    const match = line.match(/^#{1,4}\s+(.*)/);
-    if (match) {
-      sections.push({ heading: stripMarkdown(match[1]).toLowerCase(), body: [] });
-    } else {
-      sections[sections.length - 1].body.push(line);
+    const heading = line.match(/^#{1,4}\s+(.*)/);
+    if (heading) {
+      if (!titleSkipped) {
+        titleSkipped = true;
+        continue;
+      }
+      sections.push({ heading: stripMarkdown(heading[1]).toLowerCase(), body: [] });
+      continue;
     }
+    sections[sections.length - 1].body.push(line);
   }
   return sections;
 }
@@ -88,7 +100,7 @@ function extractListItems(bodyLines: string[], max: number): string[] {
 function extractOverview(preHeadingBody: string[]): string {
   const text = preHeadingBody
     .map((l) => l.trim())
-    .filter((l) => l && !l.startsWith("[![") && !l.startsWith("![") && !l.startsWith(">"))
+    .filter((l) => l && !l.startsWith("[![") && !l.startsWith("![") && !l.startsWith(">") && !/^[-*_]{3,}$/.test(l))
     .map(stripMarkdown)
     .join(" ")
     .replace(/\s+/g, " ");
@@ -146,22 +158,28 @@ const KNOWN_TECH = [
   "Next.js", "React", "Vue", "Svelte", "Angular", "Node.js", "Express", "Nest.js",
   "Flask", "Django", "FastAPI", "Spring Boot",
   "MongoDB", "PostgreSQL", "MySQL", "Redis", "SQLite", "Firebase", "Supabase",
-  "TypeScript", "JavaScript", "Python", "Rust", "Go", "Java", "Kotlin", "Swift", "Dart", "Ruby", "PHP",
   "Tailwind CSS", "Bootstrap", "Docker", "Kubernetes", "AWS", "Vercel", "Netlify",
-  "GraphQL", "REST", "JWT", "OAuth", "WebSocket", "Socket.io",
+  "GraphQL", "JWT", "OAuth", "WebSocket", "Socket.io",
   "TensorFlow", "PyTorch", "Keras", "MediaPipe", "OpenCV", "scikit-learn", "Pandas", "NumPy",
   "Zustand", "Redux", "Prisma", "Sequelize", "Mongoose", "NanoID",
+  // Deliberately excludes real programming languages (Go, Java, Python, Rust,
+  // TypeScript, ...) — those come from the languages API, which reads actual
+  // file bytes. Text-matching short language names against free-form prose
+  // is exactly how "Go" ends up "detected" inside the word "MongoDB."
 ];
 
 /** Fills in the technologies the languages API can't see — Flask, MongoDB,
  *  JWT, and the rest are frameworks and services, not languages, so a repo
  *  full of real Node/Express/MongoDB code would otherwise show up as just
- *  "JavaScript." Scans the README and description text for known names. */
+ *  "JavaScript." Scans the README and description text for known names,
+ *  matched at word boundaries so "Go" can't match inside "MongoDB" or "Java"
+ *  inside "JavaScript." */
 export function extractTechnologies(text: string, languages: string[]): string[] {
   const found = new Set<string>(languages);
-  const lower = text.toLowerCase();
   for (const tech of KNOWN_TECH) {
-    if (lower.includes(tech.toLowerCase())) found.add(tech);
+    const escaped = tech.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const pattern = new RegExp(`(?<![a-z0-9])${escaped}(?![a-z0-9])`, "i");
+    if (pattern.test(text)) found.add(tech);
   }
   return Array.from(found).slice(0, 10);
 }

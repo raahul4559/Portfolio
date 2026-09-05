@@ -6,7 +6,7 @@
  * and content/project-stories.ts (hand-authored narrative). Regenerate with
  * `npm run sync:github`, or just `npm run build` — it runs automatically.
  *
- * Last synced: 2026-09-05T03:11:32.547Z
+ * Last synced: 2026-09-05T03:50:35.693Z
  */
 import type { ActivityStats, GitHubProfile, Project } from "./types";
 
@@ -31,7 +31,6 @@ export const githubProjects: Project[] = [
       "CSS",
       "JavaScript",
       "Next.js",
-      "Bootstrap",
       "Vercel"
     ],
     "features": [],
@@ -88,7 +87,7 @@ export const githubProjects: Project[] = [
     "status": "live",
     "featured": true,
     "name": "sign-language-detection",
-    "description": "A Python project.",
+    "description": "A real-time Indian Sign Language detection web app.",
     "problem": "",
     "solution": [],
     "role": "Solo",
@@ -98,7 +97,6 @@ export const githubProjects: Project[] = [
       "CSS",
       "HTML",
       "Flask",
-      "REST",
       "Keras",
       "MediaPipe"
     ],
@@ -148,7 +146,7 @@ export const githubProjects: Project[] = [
     "status": "live",
     "featured": true,
     "name": "consultancy",
-    "description": "A HTML project.",
+    "description": "Premium educational counseling website helping students navigate admission processes for top engineering colleges in India.",
     "problem": "",
     "solution": [],
     "role": "Solo · client project",
@@ -159,8 +157,6 @@ export const githubProjects: Project[] = [
       "Python",
       "Express",
       "MongoDB",
-      "Go",
-      "Java",
       "Vercel"
     ],
     "features": [
@@ -208,7 +204,7 @@ export const githubProjects: Project[] = [
     "status": "live",
     "featured": true,
     "name": "Ecommerce-backend",
-    "description": "A JavaScript project.",
+    "description": "A robust and scalable RESTful API for an E-commerce application built with Node.js, Express.js, and MongoDB. This backend provides authentication, product management, order processing, and other essential features required for an online shopping platform.",
     "problem": "",
     "solution": [],
     "role": "Solo",
@@ -217,8 +213,6 @@ export const githubProjects: Project[] = [
       "Node.js",
       "Express",
       "MongoDB",
-      "Go",
-      "REST",
       "JWT",
       "Mongoose"
     ],
@@ -266,14 +260,12 @@ export const githubProjects: Project[] = [
     "status": "live",
     "featured": false,
     "name": "bootstrap_project",
-    "description": "A HTML project.",
+    "description": "A responsive web page built using Bootstrap 4 that showcases various Bootstrap UI components including a navigation bar, image carousel, navigation tabs, jumbotron, pagination, and progress bar.",
     "problem": "",
     "solution": [],
     "role": "Solo",
     "technologies": [
       "HTML",
-      "JavaScript",
-      "Java",
       "Bootstrap"
     ],
     "features": [
@@ -322,18 +314,14 @@ export const githubProjects: Project[] = [
     "status": "live",
     "featured": false,
     "name": "urlshortlist",
-    "description": "A JavaScript project.",
+    "description": "A simple URL shortening service built with Node.js, Express, MongoDB, and NanoID.",
     "problem": "",
     "solution": [],
     "role": "Solo",
     "technologies": [
-      "JavaScript",
       "Node.js",
       "Express",
       "MongoDB",
-      "Go",
-      "Java",
-      "REST",
       "Mongoose",
       "NanoID"
     ],
@@ -363,11 +351,9 @@ export const githubProjects: Project[] = [
       "defaultBranch": "main",
       "isFork": false,
       "isArchived": false,
-      "languages": [
-        "JavaScript"
-      ],
+      "languages": [],
       "categories": [
-        "web"
+        "experiment"
       ],
       "commits": []
     }
@@ -378,7 +364,7 @@ export const githubProjects: Project[] = [
     "status": "live",
     "featured": false,
     "name": "PROJECT-WITH-BACKEND",
-    "description": "This the backend # PROJECT-WITH-BACKEND",
+    "description": "A code project.",
     "problem": "",
     "solution": [],
     "role": "Solo",
