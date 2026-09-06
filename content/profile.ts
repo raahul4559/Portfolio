@@ -40,7 +40,11 @@ export const profile: Profile = {
 
   socials: [
     { label: "github", handle: "@rahul", href: "https://github.com/" },
-    { label: "linkedin", handle: "in/rahul", href: "https://linkedin.com/" },
+    {
+      label: "linkedin",
+      handle: "in/rahul-k-gupta",
+      href: "https://www.linkedin.com/in/rahul-k-gupta-4a3882250",
+    },
     { label: "x", handle: "@rahul", href: "https://x.com/" },
   ],
 
