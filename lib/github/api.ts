@@ -266,6 +266,60 @@ export async function fetchContributionCalendar(
   }
 }
 
+/** A repo you don't own — fetched directly by owner/repo rather than
+ *  discovered from a user's own repo list, for contribution projects. */
+export async function fetchRepoByFullName(fullName: string): Promise<RawRepo | null> {
+  try {
+    const res = await get(`/repos/${fullName}`);
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Real commit count for one contributor on a repo you don't own — the
+ * evidence behind a "contribution project" claim. GitHub's stats here are
+ * anonymized/omitted for a repo mid-computation (202 response) or one with
+ * an unusual size; both cases return `null` rather than a guessed number.
+ */
+export async function fetchContributorCommitCount(
+  fullName: string,
+  username: string,
+): Promise<number | null> {
+  try {
+    for (let page = 1; page <= 5; page++) {
+      const res = await get(`/repos/${fullName}/contributors?per_page=100&page=${page}`);
+      if (!res.ok) return null;
+      const batch: { login: string; contributions: number }[] = await res.json();
+      const match = batch.find((c) => c.login.toLowerCase() === username.toLowerCase());
+      if (match) return match.contributions;
+      if (batch.length < 100) return null;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/** Commits on a repo you don't own, scoped to your own authorship — showing
+ *  every commit on someone else's repository would misrepresent whose work
+ *  it is; showing only yours is the honest slice. */
+export async function fetchCommitsByAuthor(
+  fullName: string,
+  author: string,
+  limit = 12,
+): Promise<RawCommit[]> {
+  try {
+    const res = await get(`/repos/${fullName}/commits?author=${author}&per_page=${limit}`);
+    if (!res.ok) return [];
+    return res.json();
+  } catch {
+    return [];
+  }
+}
+
 export interface RawPublicEvent {
   id: string;
   type: string;

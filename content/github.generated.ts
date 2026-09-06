@@ -6,7 +6,7 @@
  * and content/project-stories.ts (hand-authored narrative). Regenerate with
  * `npm run sync:github`, or just `npm run build` — it runs automatically.
  *
- * Last synced: 2026-09-06T01:44:28.342Z
+ * Last synced: 2026-09-06T01:52:41.459Z
  */
 import type {
   ActivityStats,
@@ -485,6 +485,383 @@ export const githubProjects: Project[] = [
           "url": "https://github.com/raahul4559/Ecommerce-backend/commit/91aad68688d63978a8088242a96353abce8d1741"
         }
       ]
+    }
+  },
+  {
+    "slug": "deepak-inventory",
+    "year": "2026",
+    "status": "live",
+    "featured": false,
+    "name": "deepak-inventory",
+    "description": "A simple Windows desktop app for recording Sales and Purchases, keeping a live Stock ledger, and tracking running totals per Party (vendor). All data is stored in plain Excel files you can open in Excel any time.",
+    "problem": "",
+    "solution": [],
+    "role": "Contributor",
+    "technologies": [
+      "Python",
+      "PowerShell",
+      "Inno Setup",
+      "Batchfile",
+      "Mako",
+      "PostgreSQL"
+    ],
+    "features": [],
+    "architecture": [],
+    "challenges": [],
+    "results": [
+      "46 commits merged into avinrique/deepak-inventory"
+    ],
+    "lessons": [],
+    "screenshots": [],
+    "links": {
+      "github": "https://github.com/avinrique/deepak-inventory"
+    },
+    "github": {
+      "stars": 0,
+      "forks": 0,
+      "watchers": 0,
+      "openIssues": 0,
+      "createdAt": "2026-08-13T12:54:36Z",
+      "updatedAt": "2026-09-01T18:17:23Z",
+      "topics": [],
+      "defaultBranch": "main",
+      "isFork": false,
+      "isArchived": false,
+      "languages": [
+        "Python",
+        "PowerShell",
+        "Inno Setup",
+        "Batchfile",
+        "Mako"
+      ],
+      "categories": [
+        "experiment",
+        "open-source"
+      ],
+      "commits": [
+        {
+          "sha": "fca79e4",
+          "message": "Merge pull request #1 from avinrique/fix/legacy-app-hardening",
+          "date": "2026-09-01T17:52:24Z",
+          "url": "https://github.com/avinrique/deepak-inventory/commit/fca79e40a4070769199ecfd7b3836c8fbcb89aef"
+        },
+        {
+          "sha": "0b72b54",
+          "message": "Improve role loading in UserFormDialog and add tests for role handling",
+          "date": "2026-08-27T15:46:33Z",
+          "url": "https://github.com/avinrique/deepak-inventory/commit/0b72b548008ed36fa29460e03df504e853c36447"
+        },
+        {
+          "sha": "486bb9f",
+          "message": "Merge pull request #2 from avinrique/windows-packaging",
+          "date": "2026-08-27T10:59:43Z",
+          "url": "https://github.com/avinrique/deepak-inventory/commit/486bb9f65956837473220148786813f2941feaa6"
+        },
+        {
+          "sha": "3b711d8",
+          "message": "Make the packaged self-test actually observable on Windows",
+          "date": "2026-08-27T10:55:06Z",
+          "url": "https://github.com/avinrique/deepak-inventory/commit/3b711d801360abfbcc7be6352344ade65328311e"
+        },
+        {
+          "sha": "7ae7c23",
+          "message": "Make the missing-tool test neutralise all three discovery sources",
+          "date": "2026-08-27T10:40:08Z",
+          "url": "https://github.com/avinrique/deepak-inventory/commit/7ae7c23258895c05d860aca9c0182fbe2b2f9469"
+        },
+        {
+          "sha": "59bd0d0",
+          "message": "Fix the three Windows test failures CI surfaced",
+          "date": "2026-08-27T10:35:56Z",
+          "url": "https://github.com/avinrique/deepak-inventory/commit/59bd0d092bd98c52e8250643e472fa3e52cb34f4"
+        },
+        {
+          "sha": "0f46974",
+          "message": "Surface CI test failures as annotations, and force UTF-8 on Windows",
+          "date": "2026-08-27T10:30:03Z",
+          "url": "https://github.com/avinrique/deepak-inventory/commit/0f46974aef063dacb9ddeb670fc6f3c60aace465"
+        },
+        {
+          "sha": "0c31737",
+          "message": "Fix Windows DPAPI config encryption and broaden CI triggers",
+          "date": "2026-08-27T10:26:06Z",
+          "url": "https://github.com/avinrique/deepak-inventory/commit/0c317375e3dc123a15087b79502e77646e9ede03"
+        },
+        {
+          "sha": "428e5e2",
+          "message": "Add comprehensive tests for logging, crash handling, and UI responsiveness",
+          "date": "2026-08-27T10:13:30Z",
+          "url": "https://github.com/avinrique/deepak-inventory/commit/428e5e2856a46b7bc161e5fa9a12a4f2cc7346d1"
+        },
+        {
+          "sha": "ba67dcc",
+          "message": "Add tests for product and inventory features",
+          "date": "2026-08-23T17:47:33Z",
+          "url": "https://github.com/avinrique/deepak-inventory/commit/ba67dccbdaa60ed51987b6abab8d82435c966453"
+        },
+        {
+          "sha": "559ef34",
+          "message": "Add comprehensive tests for transaction totals and permissions",
+          "date": "2026-08-23T07:54:56Z",
+          "url": "https://github.com/avinrique/deepak-inventory/commit/559ef34a8f4f9565ae6d9080b3223c658cd5d494"
+        },
+        {
+          "sha": "9dadc1f",
+          "message": "feat: Update confirmation dialog styling and ensure stylesheet application after button creation",
+          "date": "2026-08-21T03:06:47Z",
+          "url": "https://github.com/avinrique/deepak-inventory/commit/9dadc1f4e369d8fa1f493421a0ab4661c85d956b"
+        }
+      ],
+      "contributionOwner": "avinrique"
+    }
+  },
+  {
+    "slug": "easygo",
+    "year": "2026",
+    "status": "live",
+    "featured": false,
+    "name": "EasyGo",
+    "description": "An end-to-end MVP that turns a single prompt — \"Plan a trip from Patna to Goa for 5 days with a budget of ₹30,000\" — into a complete, personalized travel plan: multimodal transport routes, hotels, attractions, restaurants, weather, a day-wise AI-generated itinerary, and a budget breakdown.",
+    "problem": "",
+    "solution": [],
+    "role": "Contributor",
+    "technologies": [
+      "TypeScript",
+      "CSS",
+      "Dockerfile",
+      "JavaScript",
+      "Batchfile",
+      "Next.js",
+      "React",
+      "Node.js",
+      "Express",
+      "PostgreSQL"
+    ],
+    "features": [],
+    "architecture": [],
+    "challenges": [],
+    "results": [
+      "22 commits merged into nitish-sah-js/EasyGo"
+    ],
+    "lessons": [],
+    "screenshots": [],
+    "links": {
+      "github": "https://github.com/nitish-sah-js/EasyGo"
+    },
+    "github": {
+      "stars": 0,
+      "forks": 0,
+      "watchers": 0,
+      "openIssues": 0,
+      "createdAt": "2026-08-19T20:03:34Z",
+      "updatedAt": "2026-08-22T09:32:17Z",
+      "topics": [],
+      "defaultBranch": "main",
+      "isFork": false,
+      "isArchived": false,
+      "languages": [
+        "TypeScript",
+        "CSS",
+        "Dockerfile",
+        "JavaScript",
+        "Batchfile"
+      ],
+      "categories": [
+        "ai",
+        "web",
+        "open-source"
+      ],
+      "commits": [
+        {
+          "sha": "a453a87",
+          "message": "fix: catch images that finish loading before React hydrates",
+          "date": "2026-08-22T09:30:59Z",
+          "url": "https://github.com/nitish-sah-js/EasyGo/commit/a453a87e036418d0f3e702694f10b92e211a17c9"
+        },
+        {
+          "sha": "9009da1",
+          "message": "perf: preconnect to Wikimedia's CDN for place/city photos",
+          "date": "2026-08-22T09:24:08Z",
+          "url": "https://github.com/nitish-sah-js/EasyGo/commit/9009da1f65f1606d435f2cf7a81c3e43991c2179"
+        },
+        {
+          "sha": "4a9943c",
+          "message": "fix: remove PageTransition's AnimatePresence wrapper — invisible in Safari",
+          "date": "2026-08-22T09:14:28Z",
+          "url": "https://github.com/nitish-sah-js/EasyGo/commit/4a9943cef23b99703a4be10f7314c53d7ca6d154"
+        },
+        {
+          "sha": "aecf12a",
+          "message": "fix: default Reveal/StaggerGroup to mount-time animation, not scroll-triggered",
+          "date": "2026-08-22T09:07:47Z",
+          "url": "https://github.com/nitish-sah-js/EasyGo/commit/aecf12a142733921984a3312cc381b64a63ad199"
+        },
+        {
+          "sha": "c986099",
+          "message": "fix: proxy API through the web app's own origin to fix Safari auth",
+          "date": "2026-08-22T08:49:55Z",
+          "url": "https://github.com/nitish-sah-js/EasyGo/commit/c986099e615b03474cbfd1d0f553e7c09c2ee02d"
+        },
+        {
+          "sha": "1909f62",
+          "message": "perf: join trip result query instead of ~10 sequential round trips",
+          "date": "2026-08-22T06:21:19Z",
+          "url": "https://github.com/nitish-sah-js/EasyGo/commit/1909f628d765b226a263ef1fcd731b2aac0d251b"
+        },
+        {
+          "sha": "783f385",
+          "message": "fix: prevent stale post-navigation redirects and add root error boundary",
+          "date": "2026-08-22T05:13:24Z",
+          "url": "https://github.com/nitish-sah-js/EasyGo/commit/783f385ba0396d0a85b17b7f0657f225cd3e9460"
+        },
+        {
+          "sha": "a021b0a",
+          "message": "chore: remove stray Railway config-as-code scaffold",
+          "date": "2026-08-22T04:54:42Z",
+          "url": "https://github.com/nitish-sah-js/EasyGo/commit/a021b0a99c51951eda8d0e3561859938cf566046"
+        },
+        {
+          "sha": "758a305",
+          "message": "feat: set trust proxy for express to handle real client IP in Railway environment",
+          "date": "2026-08-22T04:52:42Z",
+          "url": "https://github.com/nitish-sah-js/EasyGo/commit/758a30573852d3d9292f9f1449540918f57e340f"
+        },
+        {
+          "sha": "9b36ca9",
+          "message": "feat: update Dockerfile for improved dependency handling; add Railway configuration files and update Prisma schema for binary target compatibility",
+          "date": "2026-08-22T04:44:40Z",
+          "url": "https://github.com/nitish-sah-js/EasyGo/commit/9b36ca92ec76ba793a2a0d92e08656d327cdb24c"
+        },
+        {
+          "sha": "0303464",
+          "message": "feat: add Dockerfile and .dockerignore for containerization; update auth service cookie options for cross-site compatibility",
+          "date": "2026-08-22T03:23:11Z",
+          "url": "https://github.com/nitish-sah-js/EasyGo/commit/030346401c8a1242468ca00244a6780db1194add"
+        },
+        {
+          "sha": "c16b95d",
+          "message": "Refactor code structure for improved readability and maintainability",
+          "date": "2026-08-21T18:42:56Z",
+          "url": "https://github.com/nitish-sah-js/EasyGo/commit/c16b95d213df1ba013802b8b63c1a3db2399ab8e"
+        }
+      ],
+      "contributionOwner": "nitish-sah-js"
+    }
+  },
+  {
+    "slug": "medconsul",
+    "year": "2026",
+    "status": "live",
+    "featured": false,
+    "name": "MedConsul",
+    "description": "The webApp to find my  university based on my scores and ranks. ",
+    "problem": "",
+    "solution": [],
+    "role": "Contributor",
+    "technologies": [
+      "TypeScript",
+      "Python",
+      "JavaScript",
+      "HTML",
+      "Shell",
+      "CSS",
+      "React",
+      "Node.js",
+      "Express",
+      "MongoDB"
+    ],
+    "features": [],
+    "architecture": [],
+    "challenges": [],
+    "results": [
+      "9 commits merged into swarajsah143/MedConsul"
+    ],
+    "lessons": [],
+    "screenshots": [],
+    "links": {
+      "github": "https://github.com/swarajsah143/MedConsul"
+    },
+    "github": {
+      "stars": 0,
+      "forks": 0,
+      "watchers": 0,
+      "openIssues": 1,
+      "createdAt": "2026-06-28T11:24:22Z",
+      "updatedAt": "2026-08-06T10:29:01Z",
+      "topics": [],
+      "defaultBranch": "main",
+      "isFork": false,
+      "isArchived": false,
+      "languages": [
+        "TypeScript",
+        "Python",
+        "JavaScript",
+        "HTML",
+        "Shell",
+        "CSS"
+      ],
+      "categories": [
+        "ai",
+        "web",
+        "open-source"
+      ],
+      "commits": [
+        {
+          "sha": "be98f87",
+          "message": "feat: enhance admin and student management with role-specific adjustments and document workflow restrictions",
+          "date": "2026-08-02T17:33:48Z",
+          "url": "https://github.com/swarajsah143/MedConsul/commit/be98f871771b25d95a8564f6e0d1bf0b97be2a54"
+        },
+        {
+          "sha": "f568c9f",
+          "message": "feat: update plan management to include counsellors as staff with full authority and no subscription gating",
+          "date": "2026-07-28T20:32:07Z",
+          "url": "https://github.com/swarajsah143/MedConsul/commit/f568c9fae3fb6ce1eb820a90386293a4f88d0d06"
+        },
+        {
+          "sha": "fe819b8",
+          "message": "feat: enhance role management by adding counsellor role and updating permissions",
+          "date": "2026-07-28T19:07:41Z",
+          "url": "https://github.com/swarajsah143/MedConsul/commit/fe819b815f18bbaa4823a2b162169eb2be06efc0"
+        },
+        {
+          "sha": "b7936e4",
+          "message": "feat: add counsellor role with dedicated dashboard and lookup tools",
+          "date": "2026-07-28T18:32:42Z",
+          "url": "https://github.com/swarajsah143/MedConsul/commit/b7936e47a2823aa2982b6de8d5be53cdc5bdf410"
+        },
+        {
+          "sha": "bc350b6",
+          "message": "fix(auth): rename getProfile method to getProfileEmail for clarity",
+          "date": "2026-07-28T17:19:16Z",
+          "url": "https://github.com/swarajsah143/MedConsul/commit/bc350b67c86bd7fe36cf56dae4c48b81d86b6066"
+        },
+        {
+          "sha": "5bca7a3",
+          "message": "feat: add Google Sign-In support",
+          "date": "2026-07-28T10:21:05Z",
+          "url": "https://github.com/swarajsah143/MedConsul/commit/5bca7a373a19437105971967f8638a092299070d"
+        },
+        {
+          "sha": "713462c",
+          "message": "fix(auth): add user not found check in getProfile method",
+          "date": "2026-07-28T09:33:04Z",
+          "url": "https://github.com/swarajsah143/MedConsul/commit/713462cad1775646e788a9a4f258871d1ab85bbb"
+        },
+        {
+          "sha": "7c96e56",
+          "message": "fix(auth): add user existence check in forgot password flow",
+          "date": "2026-07-28T09:31:14Z",
+          "url": "https://github.com/swarajsah143/MedConsul/commit/7c96e564deba22ba704722b07c47cfc2f093a8db"
+        },
+        {
+          "sha": "f79e21f",
+          "message": "fix(package-lock): update peer dependencies in client and server",
+          "date": "2026-07-26T20:06:03Z",
+          "url": "https://github.com/swarajsah143/MedConsul/commit/f79e21fe11599058c8fef5e86a1430f9fe70d99d"
+        }
+      ],
+      "contributionOwner": "swarajsah143"
     }
   },
   {

@@ -22,11 +22,14 @@ import path from "node:path";
 
 import {
   fetchCommits,
+  fetchCommitsByAuthor,
   fetchContributionActivity,
   fetchContributionCalendar,
+  fetchContributorCommitCount,
   fetchLanguages,
   fetchPublicEvents,
   fetchReadme,
+  fetchRepoByFullName,
   fetchRepos,
   fetchUser,
   type RawRepo,
@@ -34,6 +37,7 @@ import {
 import { computeStreaks, mapPublicEvents } from "../lib/github/activity.ts";
 import { extractTechnologies, parseReadme } from "../lib/github/readme.ts";
 import { categorize, selectFeatured } from "../lib/github/score.ts";
+import { contributionProjects } from "../content/contributions.ts";
 import { featuredProjects } from "../content/featured.ts";
 import { projectStories } from "../content/project-stories.ts";
 import type {
@@ -190,6 +194,100 @@ async function main() {
         })),
       },
     });
+  }
+
+  // Repos you don't own but contributed to — fetched directly, since
+  // `/users/{you}/repos` only ever lists your own. Real commit count comes
+  // from GitHub's own contributor stats, not a claim.
+  const usedSlugs = new Set(projects.map((p) => p.slug));
+  for (const fullName of contributionProjects) {
+    const owner = fullName.split("/")[0];
+    const repo = await fetchRepoByFullName(fullName);
+    if (!repo) {
+      console.warn(`  ! Could not fetch contribution repo "${fullName}" — skipping.`);
+      continue;
+    }
+
+    const readme = await fetchReadme(fullName);
+    const repoLanguages = await fetchLanguages(fullName);
+    const parsed = readme ? parseReadme(readme) : null;
+    const story = projectStories[repo.name] ?? {};
+    const isFeatured = featuredProjects.includes(repo.name);
+
+    const technologies = extractTechnologies(`${repo.description ?? ""} ${readme ?? ""}`, repoLanguages);
+    const commitCount = await fetchContributorCommitCount(fullName, USERNAME);
+    const commits = await fetchCommitsByAuthor(fullName, USERNAME, 12);
+    const license =
+      repo.license && repo.license.spdx_id !== "NOASSERTION" ? repo.license.spdx_id : undefined;
+
+    const screenshots = (parsed?.images ?? [])
+      .map((src) => resolveImageUrl(src, fullName, repo.default_branch))
+      .filter((url) => !/shields\.io|badge/i.test(url))
+      .slice(0, 4);
+
+    let slug = slugify(repo.name);
+    if (usedSlugs.has(slug)) slug = slugify(`${owner}-${repo.name}`);
+    usedSlugs.add(slug);
+
+    const results = [...(story.results ?? [])];
+    if (commitCount !== null) {
+      results.unshift(`${commitCount} commit${commitCount === 1 ? "" : "s"} merged into ${fullName}`);
+    }
+
+    projects.push({
+      slug,
+      year: String(new Date(repo.created_at).getFullYear()),
+      status: deriveStatus(repo, story.status),
+      featured: isFeatured,
+
+      name: repo.name,
+      description:
+        story.description ||
+        repo.description ||
+        parsed?.overview ||
+        `A ${repoLanguages[0] ?? "code"} project.`,
+      problem: story.problem ?? "",
+      solution: story.solution ?? [],
+      role: story.role ?? "Contributor",
+      technologies,
+      features: parsed?.features ?? [],
+      architecture: story.architecture ?? [],
+      challenges: story.challenges ?? [],
+      results,
+      lessons: story.lessons ?? [],
+      screenshots,
+      links: {
+        github: repo.html_url,
+        live: story.live || repo.homepage || undefined,
+      },
+      retro: story.retro,
+
+      github: {
+        stars: repo.stargazers_count,
+        forks: repo.forks_count,
+        watchers: repo.watchers_count,
+        openIssues: repo.open_issues_count,
+        createdAt: repo.created_at,
+        updatedAt: repo.updated_at,
+        topics: repo.topics,
+        license,
+        defaultBranch: repo.default_branch,
+        isFork: repo.fork,
+        isArchived: repo.archived,
+        languages: repoLanguages,
+        categories: Array.from(new Set([...categorize(repo, readme, repoLanguages), "open-source" as const])),
+        commits: commits.map((c) => ({
+          sha: c.sha.slice(0, 7),
+          message: c.commit.message.split("\n")[0],
+          date: c.commit.author?.date ?? repo.updated_at,
+          url: c.html_url,
+        })),
+        contributionOwner: owner,
+      },
+    });
+    console.log(
+      `  contribution: ${fullName} — ${commitCount ?? "unknown"} commits by ${USERNAME}`,
+    );
   }
 
   // Featured first (manual order if set, else score order — selectFeatured

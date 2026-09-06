@@ -66,6 +66,10 @@ export interface GitHubMeta {
   languages: string[];
   categories: ProjectCategory[];
   commits: GitHubCommit[];
+  /** Set only for a contribution project — the actual owner's login, so the
+   *  UI can say "contributed to {owner}/{repo}" instead of implying
+   *  ownership. Undefined for a repo you own. */
+  contributionOwner?: string;
 }
 
 /**
