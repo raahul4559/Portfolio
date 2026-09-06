@@ -6,6 +6,33 @@ import type { TimelineEntry } from "./types";
  */
 export const timeline: TimelineEntry[] = [
   {
+    id: "degree",
+    from: "2025",
+    to: "2029",
+    org: "BMS Institute of Technology and Management",
+    role: "B.Tech, Computer Science",
+    kind: "education",
+    location: "Bangalore ,India",
+    bullets: [
+      "Compilers and distributed systems were the two courses that changed how I write code.",
+      "Maintained a small open-source formatter throughout, which taught me more than most coursework.",
+    ],
+  },
+  {
+    id: "first-role",
+    from: "30 Jun 2026",
+    to: "present",
+    org: "Early-stage startup",
+    role: "Software Engineering Intern",
+    kind: "work",
+    location: "Bengaluru",
+    bullets: [
+      "Third engineer. Built the billing integration, the admin tooling, and most of the onboarding flow.",
+      "Learned what a nine-month-old codebase with no tests feels like, from the inside.",
+    ],
+    stack: ["React", "Node", "Postgres"],
+  },
+  {
     id: "freelance",
     from: "2025",
     to: "present",
@@ -50,31 +77,6 @@ export const timeline: TimelineEntry[] = [
     ],
     stack: ["Ruby", "Postgres", "MySQL"],
   },
-  {
-    id: "first-role",
-    from: "30 Jun 2026",
-    to: "30 Sept 2026",
-    org: "Early-stage startup",
-    role: "Software Engineering Intern",
-    kind: "work",
-    location: "Bengaluru",
-    bullets: [
-      "Third engineer. Built the billing integration, the admin tooling, and most of the onboarding flow.",
-      "Learned what a nine-month-old codebase with no tests feels like, from the inside.",
-    ],
-    stack: ["React", "Node", "Postgres"],
-  },
-  {
-    id: "degree",
-    from: "2025",
-    to: "2029",
-    org: "BMS Institute of Technology and Management",
-    role: "B.Tech, Computer Science",
-    kind: "education",
-    location: "Bangalore ,India",
-    bullets: [
-      "Compilers and distributed systems were the two courses that changed how I write code.",
-      "Maintained a small open-source formatter throughout, which taught me more than most coursework.",
-    ],
-  },
+  
+
 ];
