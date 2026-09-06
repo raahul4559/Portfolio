@@ -133,6 +133,18 @@ export function CommandPalette() {
       keywords: ["recruiter", "quick view", "summary", "hire", "client", "fast"],
       run: () => go("/recruiter"),
     },
+    {
+      id: "activity-timeline",
+      title: "Open activity feed",
+      keywords: ["activity", "timeline", "commits", "pull requests", "issues", "recent"],
+      run: () => go("/activity/timeline"),
+    },
+    {
+      id: "activity-insights",
+      title: "Open developer insights",
+      keywords: ["insights", "languages", "most active", "stars", "repos"],
+      run: () => go("/activity/insights"),
+    },
     ...profile.socials.map<Action>((social) => ({
       id: `social-${social.label}`,
       title: `Open ${SOCIAL_DISPLAY_NAME[social.label] ?? social.label}`,

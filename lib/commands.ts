@@ -1,11 +1,15 @@
 import {
+  activityStats,
   filesystem,
   getProject,
+  githubProfile,
   modules,
   now,
   profile,
   projects,
+  recentActivity,
   stack,
+  streaks,
   systemStats,
   timeline,
 } from "@/content";
@@ -78,6 +82,7 @@ export const SHELL_USER = "visitor";
 const ALIASES: Record<string, string> = {
   stack: "skills",
   timeline: "experience",
+  contributions: "activity",
 };
 
 const text = (value: string, tone: Tone = "text"): Block => ({
@@ -132,6 +137,8 @@ const PRIMARY_HELP_ORDER = [
   "skills",
   "projects",
   "experience",
+  "activity",
+  "insights",
   "contact",
   "github",
   "resume",
@@ -351,6 +358,57 @@ const COMMANDS: CommandSpec[] = [
       },
       text("open experience for the full timeline", "faint"),
     ],
+  },
+
+  {
+    name: "activity",
+    usage: "activity",
+    summary: "Real GitHub contribution activity",
+    run: () => [
+      {
+        type: "kv",
+        rows: [
+          { k: "year", v: activityStats ? String(activityStats.year) : "n/a" },
+          { k: "commits", v: activityStats ? String(activityStats.totalCommits) : "n/a" },
+          { k: "pull requests", v: activityStats ? String(activityStats.totalPRs) : "n/a" },
+          { k: "current streak", v: streaks ? `${streaks.current}d` : "n/a" },
+          { k: "longest streak", v: streaks ? `${streaks.longest}d` : "n/a" },
+          { k: "recent events", v: String(recentActivity.length) },
+        ],
+      },
+      text("open activity for the full contribution graph, or activity/timeline for the feed", "faint"),
+    ],
+  },
+
+  {
+    name: "insights",
+    usage: "insights",
+    summary: "Developer insights — languages, most active repos",
+    run: () => {
+      const withGithub = projects.filter((p) => p.github);
+      const totalStars = withGithub.reduce((n, p) => n + (p.github?.stars ?? 0), 0);
+      const topLanguage = new Map<string, number>();
+      for (const p of withGithub) {
+        const lang = p.github?.languages[0];
+        if (lang) topLanguage.set(lang, (topLanguage.get(lang) ?? 0) + 1);
+      }
+      const [leadingLanguage] = [...topLanguage.entries()].sort((a, b) => b[1] - a[1])[0] ?? [
+        "n/a",
+      ];
+
+      return [
+        {
+          type: "kv",
+          rows: [
+            { k: "public repos", v: String(githubProfile.publicRepos) },
+            { k: "total stars", v: String(totalStars) },
+            { k: "followers", v: String(githubProfile.followers) },
+            { k: "top language", v: leadingLanguage },
+          ],
+        },
+        text("open activity/insights for the full breakdown", "faint"),
+      ];
+    },
   },
 
   {
@@ -665,6 +723,43 @@ function renderFile(kind: string, ref?: string): Block[] {
 
     case "now":
       return [{ type: "kv", rows: nowRows() }];
+
+    case "activity":
+      if (ref === "timeline") {
+        return [
+          {
+            type: "kv",
+            rows: recentActivity
+              .slice(0, 10)
+              .map((a) => ({ k: a.kind.replace("_", " "), v: a.title })),
+          },
+          text("open activity/timeline for the full feed", "faint"),
+        ];
+      }
+      if (ref === "insights") {
+        return [
+          {
+            type: "kv",
+            rows: [
+              { k: "public repos", v: String(githubProfile.publicRepos) },
+              { k: "followers", v: String(githubProfile.followers) },
+            ],
+          },
+          text("open activity/insights for the full breakdown", "faint"),
+        ];
+      }
+      return [
+        {
+          type: "kv",
+          rows: [
+            { k: "year", v: activityStats ? String(activityStats.year) : "n/a" },
+            { k: "commits", v: activityStats ? String(activityStats.totalCommits) : "n/a" },
+            { k: "current streak", v: streaks ? `${streaks.current}d` : "n/a" },
+            { k: "longest streak", v: streaks ? `${streaks.longest}d` : "n/a" },
+          ],
+        },
+        text("open activity for the full contribution graph", "faint"),
+      ];
 
     default:
       return [error("cat: unknown file type")];

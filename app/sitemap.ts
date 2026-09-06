@@ -23,5 +23,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/recruiter`, changeFrequency: "monthly" as const, priority: 0.8 },
   ];
 
-  return [...modules, ...caseStudies, ...recruiterView];
+  // The activity module's own two sub-routes — real, shareable pages one
+  // level below its rail entry, same treatment as the recruiter view above.
+  const activityViews = ["/activity/timeline", "/activity/insights"].map((route) => ({
+    url: `${SITE_URL}${route}`,
+    changeFrequency: "daily" as const,
+    priority: 0.5,
+  }));
+
+  return [...modules, ...caseStudies, ...recruiterView, ...activityViews];
 }

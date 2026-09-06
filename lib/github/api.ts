@@ -68,6 +68,7 @@ export interface RawUser {
   followers: number;
   following: number;
   public_repos: number;
+  created_at: string;
 }
 
 export async function fetchUser(username: string): Promise<RawUser> {
@@ -195,4 +196,103 @@ export async function fetchContributionActivity(username: string): Promise<{
   } catch {
     return null;
   }
+}
+
+export interface RawContributionDay {
+  date: string;
+  count: number;
+  weekday: number;
+}
+
+/**
+ * The real day-by-day contribution calendar for one calendar year, via the
+ * same authenticated GraphQL endpoint as `fetchContributionActivity` — this
+ * is the only API that exposes per-day counts at all. Returns `null` on any
+ * failure so the caller can drop the year entirely rather than draw a
+ * heatmap with fabricated gaps.
+ */
+export async function fetchContributionCalendar(
+  username: string,
+  year: number,
+): Promise<{ total: number; days: RawContributionDay[] } | null> {
+  if (!TOKEN) return null;
+
+  const from = new Date(Date.UTC(year, 0, 1)).toISOString();
+  const to = new Date(Date.UTC(year + 1, 0, 1)).toISOString();
+
+  const query = `
+    query($login: String!, $from: DateTime!, $to: DateTime!) {
+      user(login: $login) {
+        contributionsCollection(from: $from, to: $to) {
+          contributionCalendar {
+            totalContributions
+            weeks {
+              contributionDays {
+                date
+                contributionCount
+                weekday
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const res = await fetch("https://api.github.com/graphql", {
+      method: "POST",
+      headers: headers({ "Content-Type": "application/json" }),
+      body: JSON.stringify({ query, variables: { login: username, from, to } }),
+    });
+    if (!res.ok) return null;
+    const json = await res.json();
+    const calendar =
+      json?.data?.user?.contributionsCollection?.contributionCalendar;
+    if (!calendar) return null;
+
+    const days: RawContributionDay[] = calendar.weeks.flatMap(
+      (week: { contributionDays: { date: string; contributionCount: number; weekday: number }[] }) =>
+        week.contributionDays.map((d) => ({
+          date: d.date,
+          count: d.contributionCount,
+          weekday: d.weekday,
+        })),
+    );
+
+    return { total: calendar.totalContributions ?? 0, days };
+  } catch {
+    return null;
+  }
+}
+
+export interface RawPublicEvent {
+  id: string;
+  type: string;
+  created_at: string;
+  repo: { name: string; url: string };
+  payload: Record<string, unknown>;
+}
+
+/**
+ * GitHub's public events feed — no token required, since it only ever
+ * returns activity that's already public. This is the source for the
+ * commits/PRs/issues activity feed; GitHub caps this endpoint at the most
+ * recent ~90 days / 300 events regardless of pagination, so it is a recency
+ * window, not a full history.
+ */
+export async function fetchPublicEvents(username: string): Promise<RawPublicEvent[]> {
+  const events: RawPublicEvent[] = [];
+  for (let page = 1; page <= 3; page++) {
+    try {
+      const res = await get(`/users/${username}/events/public?per_page=100&page=${page}`);
+      if (!res.ok) break;
+      const batch: RawPublicEvent[] = await res.json();
+      events.push(...batch);
+      if (batch.length < 100) break;
+    } catch {
+      break;
+    }
+  }
+  return events;
 }

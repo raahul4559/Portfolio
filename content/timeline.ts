@@ -52,10 +52,10 @@ export const timeline: TimelineEntry[] = [
   },
   {
     id: "first-role",
-    from: "2021",
-    to: "2022",
+    from: "30 Jun 2026",
+    to: "30 Sept 2026",
     org: "Early-stage startup",
-    role: "Software engineer",
+    role: "Software Engineering Intern",
     kind: "work",
     location: "Bengaluru",
     bullets: [
@@ -66,12 +66,12 @@ export const timeline: TimelineEntry[] = [
   },
   {
     id: "degree",
-    from: "2017",
-    to: "2021",
-    org: "University",
+    from: "2025",
+    to: "2029",
+    org: "BMS Institute of Technology and Management",
     role: "B.Tech, Computer Science",
     kind: "education",
-    location: "India",
+    location: "Bangalore ,India",
     bullets: [
       "Compilers and distributed systems were the two courses that changed how I write code.",
       "Maintained a small open-source formatter throughout, which taught me more than most coursework.",

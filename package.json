@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/sync-github.ts",
+    "prebuild": "node --env-file-if-exists=.env.local scripts/sync-github.ts",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "sync:github": "node scripts/sync-github.ts"
+    "sync:github": "node --env-file-if-exists=.env.local scripts/sync-github.ts"
   },
   "dependencies": {
     "cmdk": "^1.1.1",

@@ -1,4 +1,4 @@
-import { githubProjects } from "./github.generated";
+import { contributionYears, githubProjects, recentActivity, streaks } from "./github.generated";
 import { modules } from "./modules";
 import { now } from "./now";
 import { profile } from "./profile";
@@ -12,7 +12,13 @@ export { now } from "./now";
 export { profile } from "./profile";
 export { stack, stackItemCount } from "./stack";
 export { timeline } from "./timeline";
-export { activityStats, githubProfile } from "./github.generated";
+export {
+  activityStats,
+  contributionYears,
+  githubProfile,
+  recentActivity,
+  streaks,
+} from "./github.generated";
 
 /**
  * Every project on the site — real GitHub repositories, synced at build
@@ -107,6 +113,39 @@ export const filesystem: VDir = {
       kind: "timeline",
       route: "/timeline",
       size: weigh(...timeline.map((t) => t.bullets.join(""))),
+    },
+    {
+      type: "dir",
+      name: "activity",
+      children: [
+        {
+          type: "file",
+          name: "contributions",
+          kind: "activity",
+          ref: "contributions",
+          route: "/activity",
+          size: weigh(
+            contributionYears.map((y) => `${y.year}:${y.total}`),
+            streaks ? `${streaks.current}:${streaks.longest}` : "",
+          ),
+        },
+        {
+          type: "file",
+          name: "timeline",
+          kind: "activity",
+          ref: "timeline",
+          route: "/activity/timeline",
+          size: weigh(recentActivity.map((a) => a.title)),
+        },
+        {
+          type: "file",
+          name: "insights",
+          kind: "activity",
+          ref: "insights",
+          route: "/activity/insights",
+          size: weigh(projects.flatMap((p) => p.github?.languages ?? [])),
+        },
+      ],
     },
     {
       type: "file",

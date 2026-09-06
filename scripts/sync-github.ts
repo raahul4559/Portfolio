@@ -23,22 +23,32 @@ import path from "node:path";
 import {
   fetchCommits,
   fetchContributionActivity,
+  fetchContributionCalendar,
   fetchLanguages,
+  fetchPublicEvents,
   fetchReadme,
   fetchRepos,
   fetchUser,
   type RawRepo,
 } from "../lib/github/api.ts";
+import { computeStreaks, mapPublicEvents } from "../lib/github/activity.ts";
 import { extractTechnologies, parseReadme } from "../lib/github/readme.ts";
 import { categorize, selectFeatured } from "../lib/github/score.ts";
 import { featuredProjects } from "../content/featured.ts";
 import { projectStories } from "../content/project-stories.ts";
 import type {
   ActivityStats,
+  ContributionYear,
   GitHubProfile,
   Project,
   ProjectStatus,
+  RecentActivityItem,
+  StreakStats,
 } from "../content/types.ts";
+
+/** How many calendar years back the heatmap's yearly nav goes, capped so a
+ *  long-lived account doesn't turn one sync into dozens of GraphQL calls. */
+const MAX_CALENDAR_YEARS = 4;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUTPUT_PATH = path.join(__dirname, "../content/github.generated.ts");
@@ -215,7 +225,36 @@ async function main() {
     console.log("  activity: unavailable — Developer Activity section will be hidden");
   }
 
-  writeGeneratedFile({ projects, githubProfile, activityStats });
+  const currentYear = new Date().getUTCFullYear();
+  const joinYear = new Date(user.created_at).getUTCFullYear();
+  const yearsToFetch = Math.min(currentYear - joinYear + 1, MAX_CALENDAR_YEARS);
+
+  const contributionYears: ContributionYear[] = [];
+  for (let i = 0; i < yearsToFetch; i++) {
+    const year = currentYear - i;
+    const calendar = await fetchContributionCalendar(USERNAME, year);
+    if (calendar) contributionYears.push({ year, total: calendar.total, days: calendar.days });
+  }
+  if (contributionYears.length > 0) {
+    console.log(`  contribution calendar: ${contributionYears.length} year(s) via GraphQL`);
+  } else {
+    console.log("  contribution calendar: unavailable — heatmap will be hidden");
+  }
+
+  const streaks: StreakStats | null = computeStreaks(contributionYears);
+
+  const publicEvents = await fetchPublicEvents(USERNAME);
+  const recentActivity: RecentActivityItem[] = mapPublicEvents(publicEvents);
+  console.log(`  recent activity: ${recentActivity.length} events from the public feed`);
+
+  writeGeneratedFile({
+    projects,
+    githubProfile,
+    activityStats,
+    contributionYears,
+    streaks,
+    recentActivity,
+  });
   console.log(`✓ Wrote ${projects.length} projects to content/github.generated.ts`);
 }
 
@@ -223,6 +262,9 @@ function writeGeneratedFile(data: {
   projects: Project[];
   githubProfile: GitHubProfile;
   activityStats: ActivityStats | null;
+  contributionYears: ContributionYear[];
+  streaks: StreakStats | null;
+  recentActivity: RecentActivityItem[];
 }) {
   const banner = `/**
  * GENERATED FILE — do not edit by hand.
@@ -234,14 +276,24 @@ function writeGeneratedFile(data: {
  *
  * Last synced: ${new Date().toISOString()}
  */
-import type { ActivityStats, GitHubProfile, Project } from "./types";
+import type {
+  ActivityStats,
+  ContributionYear,
+  GitHubProfile,
+  Project,
+  RecentActivityItem,
+  StreakStats,
+} from "./types";
 
 `;
 
   const body =
     `export const githubProjects: Project[] = ${JSON.stringify(data.projects, null, 2)};\n\n` +
     `export const githubProfile: GitHubProfile = ${JSON.stringify(data.githubProfile, null, 2)};\n\n` +
-    `export const activityStats: ActivityStats | null = ${JSON.stringify(data.activityStats, null, 2)};\n`;
+    `export const activityStats: ActivityStats | null = ${JSON.stringify(data.activityStats, null, 2)};\n\n` +
+    `export const contributionYears: ContributionYear[] = ${JSON.stringify(data.contributionYears, null, 2)};\n\n` +
+    `export const streaks: StreakStats | null = ${JSON.stringify(data.streaks, null, 2)};\n\n` +
+    `export const recentActivity: RecentActivityItem[] = ${JSON.stringify(data.recentActivity, null, 2)};\n`;
 
   writeFileSync(OUTPUT_PATH, banner + body, "utf-8");
 }

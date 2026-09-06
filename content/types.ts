@@ -6,7 +6,14 @@
  * a project means adding one `Project`; it then appears everywhere at once.
  */
 
-export type ModuleId = "readme" | "projects" | "stack" | "timeline" | "contact" | "now";
+export type ModuleId =
+  | "readme"
+  | "projects"
+  | "stack"
+  | "timeline"
+  | "activity"
+  | "contact"
+  | "now";
 
 export interface OSModule {
   id: ModuleId;
@@ -166,6 +173,58 @@ export interface ActivityStats {
   reposActive: number;
 }
 
+/** One real day on the contribution calendar. Never interpolated — a day
+ *  GitHub didn't return is simply absent, not zero-filled. */
+export interface ContributionDay {
+  date: string;
+  count: number;
+  weekday: number;
+}
+
+/** One year of the real GraphQL contribution calendar — the day-level data
+ *  `ActivityStats` doesn't carry, used to draw an actual heatmap instead of
+ *  a bar chart. `year` is the calendar year the days fall in, not a rolling
+ *  window. */
+export interface ContributionYear {
+  year: number;
+  total: number;
+  days: ContributionDay[];
+}
+
+/** Computed from the real day-level data, not a separate API — GitHub's own
+ *  profile page derives its streak the same way. `null` whole-object when
+ *  there isn't at least one full calendar year to compute it from. */
+export interface StreakStats {
+  current: number;
+  longest: number;
+  longestFrom?: string;
+  longestTo?: string;
+}
+
+export type RecentActivityKind =
+  | "push"
+  | "pull_request"
+  | "issue"
+  | "review"
+  | "release"
+  | "create"
+  | "fork"
+  | "star"
+  | "other";
+
+/** One real event from GitHub's public events feed — never synthesized, and
+ *  never a private event, since that endpoint only ever returns public
+ *  activity regardless of the token used to call it. */
+export interface RecentActivityItem {
+  id: string;
+  kind: RecentActivityKind;
+  repo: string;
+  repoUrl: string;
+  title: string;
+  url?: string;
+  date: string;
+}
+
 /** One row of the `/dev/now` status table — `label` is the fixed left-hand
  *  word ("Building", "Learning", …), `value` is the only part that changes. */
 export interface NowFocusItem {
@@ -268,7 +327,8 @@ export type VFileKind =
   | "timeline"
   | "contact"
   | "resume"
-  | "now";
+  | "now"
+  | "activity";
 
 export interface VFile {
   type: "file";

@@ -25,7 +25,7 @@ export const profile: Profile = {
   location: "Bengaluru, India",
   timezone: "Asia/Kolkata",
   timezoneLabel: "IST",
-  experience: "4 years",
+  experience: "1 years",
 
   availability: {
     state: "selective",

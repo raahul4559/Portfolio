@@ -197,6 +197,40 @@ export function FrameBar({
   );
 }
 
+/**
+ * Monochrome unicode-block bars — the site's one chart idiom, used for any
+ * "a few real numbers, compared" moment (developer activity, language mix,
+ * contribution breakdown). Deliberately not a colored chart: four rough
+ * buckets of real activity don't have the precision a color scale implies.
+ */
+export function BarRows({
+  rows,
+  width = 24,
+}: {
+  rows: { label: string; value: number }[];
+  width?: number;
+}) {
+  const max = Math.max(...rows.map((r) => r.value), 1);
+
+  return (
+    <dl className="space-y-2.5 font-mono text-data">
+      {rows.map((row) => {
+        const filled = Math.round((row.value / max) * width);
+        return (
+          <div key={row.label} className="flex items-center gap-3">
+            <dt className="text-muted w-28 shrink-0 truncate">{row.label}</dt>
+            <dd aria-hidden className="flex-1 leading-none tracking-tighter">
+              <span className="text-text">{"█".repeat(filled)}</span>
+              <span className="text-line-strong">{"░".repeat(width - filled)}</span>
+            </dd>
+            <dd className="text-faint tnum w-8 shrink-0 text-right text-micro">{row.value}</dd>
+          </div>
+        );
+      })}
+    </dl>
+  );
+}
+
 /** Numbered index used down the left edge of lists. */
 export function Ordinal({ n }: { n: number }) {
   return (

@@ -18,6 +18,14 @@ export interface RouteDescriptor {
 
 const PROJECTS_ROUTE = "/projects";
 
+/** Sub-routes one level below the `activity` module's own route — the
+ *  module's rail entry always points at `/activity`, but each tab within it
+ *  is a real, shareable route too. */
+const ACTIVITY_SUB_ROUTES: Record<string, string> = {
+  "/activity/timeline": "timeline",
+  "/activity/insights": "insights",
+};
+
 export function describeRoute(route: string): RouteDescriptor {
   const mod = moduleByRoute.get(route);
   if (mod) {
@@ -40,12 +48,23 @@ export function describeRoute(route: string): RouteDescriptor {
     };
   }
 
+  if (route in ACTIVITY_SUB_ROUTES) {
+    const file = ACTIVITY_SUB_ROUTES[route];
+    return {
+      file,
+      label: `activity/${file}`,
+      path: `~/activity/${file}`,
+      moduleId: "activity",
+    };
+  }
+
   return { file: "not-found", label: "not found", path: "~/?", moduleId: "" };
 }
 
 /** True for routes the OS knows how to render as a document. */
 export function isKnownRoute(route: string): boolean {
   if (moduleByRoute.has(route)) return true;
+  if (route in ACTIVITY_SUB_ROUTES) return true;
   if (!route.startsWith(`${PROJECTS_ROUTE}/`)) return false;
   return Boolean(getProject(route.slice(PROJECTS_ROUTE.length + 1)));
 }

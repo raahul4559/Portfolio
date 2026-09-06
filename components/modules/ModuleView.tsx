@@ -1,5 +1,8 @@
 "use client";
 
+import { ActivityModule } from "@/components/modules/Activity";
+import { ActivityInsightsModule } from "@/components/modules/ActivityInsights";
+import { ActivityTimelineModule } from "@/components/modules/ActivityTimeline";
 import { ContactModule } from "@/components/modules/Contact";
 import { NowModule } from "@/components/modules/Now";
 import { ProjectRepo } from "@/components/modules/ProjectRepo";
@@ -24,6 +27,9 @@ export function ModuleView({ route }: { route: string }) {
   if (route === "/timeline") return <TimelineModule />;
   if (route === "/contact") return <ContactModule />;
   if (route === "/dev/now") return <NowModule />;
+  if (route === "/activity") return <ActivityModule />;
+  if (route === "/activity/timeline") return <ActivityTimelineModule />;
+  if (route === "/activity/insights") return <ActivityInsightsModule />;
 
   if (route.startsWith("/projects/")) {
     const project = getProject(route.slice("/projects/".length));
