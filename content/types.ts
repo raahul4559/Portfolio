@@ -12,8 +12,7 @@ export type ModuleId =
   | "stack"
   | "timeline"
   | "activity"
-  | "contact"
-  | "now";
+  | "contact";
 
 export interface OSModule {
   id: ModuleId;
@@ -229,34 +228,6 @@ export interface RecentActivityItem {
   date: string;
 }
 
-/** One row of the `/dev/now` status table — `label` is the fixed left-hand
- *  word ("Building", "Learning", …), `value` is the only part that changes. */
-export interface NowFocusItem {
-  label: string;
-  value: string;
-}
-
-/** A name plus the one line that explains it — used for both `favoriteTech`
- *  (taste, not proficiency — see `stack.ts` for the honest ratings) and
- *  `experiments` (small, finished-or-not side projects). */
-export interface NowLink {
-  name: string;
-  note: string;
-  href?: string;
-}
-
-export interface Now {
-  /** Hand-set, not computed — the point is that a stale date is visible. */
-  updated: string;
-  focus: NowFocusItem[];
-  favoriteTech: NowLink[];
-  preferences: string[];
-  principles: string[];
-  experiments: NowLink[];
-  /** One human paragraph. Signed, not corporate. */
-  note: string;
-}
-
 export interface StackItem {
   name: string;
   /** 1–5, rendered as five blocks. Be honest; 5 means you'd teach it. */
@@ -331,7 +302,6 @@ export type VFileKind =
   | "timeline"
   | "contact"
   | "resume"
-  | "now"
   | "activity";
 
 export interface VFile {

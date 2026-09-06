@@ -3,17 +3,49 @@
 import { useEffect, useState } from "react";
 
 import { Document, DocumentHead, Section } from "@/components/ui/Document";
-import { ExternalLink } from "@/components/ui/bits";
+import { ExternalLink, MetaList } from "@/components/ui/bits";
 import { profile } from "@/content";
+import { presenceFor, timeInZone } from "@/lib/clock";
 import { copyText } from "@/lib/dom";
+import { useMinuteTick, useMounted } from "@/lib/hooks";
+
+const TONE_CLASS = {
+  ok: "text-ok",
+  warn: "text-warn",
+  muted: "text-faint",
+  err: "text-err",
+} as const;
 
 export function ContactModule() {
+  const mounted = useMounted();
+  useMinuteTick();
+
+  const clock = timeInZone(profile.timezone);
+  const presence = presenceFor(
+    clock.hour,
+    profile.availability.state,
+    profile.availability.label,
+  );
+
   return (
     <Document>
       <DocumentHead
         eyebrow="contact.md"
         title="Get in touch"
         summary={profile.availability.detail}
+        aside={
+          <span className="flex shrink-0 items-center gap-2">
+            <span
+              className={`text-[9px] leading-none ${mounted ? TONE_CLASS[presence.tone] : "text-faint"}`}
+              aria-hidden
+            >
+              {mounted ? presence.glyph : "○"}
+            </span>
+            <span className="label text-faint">
+              {mounted ? presence.label : profile.availability.label}
+            </span>
+          </span>
+        }
       />
 
       <Section label="email">
@@ -21,6 +53,19 @@ export function ContactModule() {
         <p className="text-ui text-faint mt-3 font-mono">
           {profile.availability.responseTime}
         </p>
+      </Section>
+
+      <Section label="details">
+        <MetaList
+          items={[
+            { key: "location", value: profile.location },
+            {
+              key: "local time",
+              value: mounted ? `${clock.time} ${profile.timezoneLabel}` : "—:—",
+            },
+            { key: "experience", value: profile.experience },
+          ]}
+        />
       </Section>
 
       <Section label="elsewhere" count={profile.socials.length}>

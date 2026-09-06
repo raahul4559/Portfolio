@@ -4,7 +4,6 @@ import { ActivityModule } from "@/components/modules/Activity";
 import { ActivityInsightsModule } from "@/components/modules/ActivityInsights";
 import { ActivityTimelineModule } from "@/components/modules/ActivityTimeline";
 import { ContactModule } from "@/components/modules/Contact";
-import { NowModule } from "@/components/modules/Now";
 import { ProjectRepo } from "@/components/modules/ProjectRepo";
 import { ProjectsModule } from "@/components/modules/Projects";
 import { ReadmeModule } from "@/components/modules/Readme";
@@ -26,7 +25,6 @@ export function ModuleView({ route }: { route: string }) {
   if (route === "/stack") return <StackModule />;
   if (route === "/timeline") return <TimelineModule />;
   if (route === "/contact") return <ContactModule />;
-  if (route === "/dev/now") return <NowModule />;
   if (route === "/activity") return <ActivityModule />;
   if (route === "/activity/timeline") return <ActivityTimelineModule />;
   if (route === "/activity/insights") return <ActivityInsightsModule />;

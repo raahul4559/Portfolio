@@ -68,15 +68,6 @@ export const modules: OSModule[] = [
     description: "Email, socials, availability",
     keywords: ["email", "hire", "reach", "get in touch", "available"],
   },
-  {
-    id: "now",
-    code: "NW",
-    label: "now",
-    file: "dev/now",
-    route: "/dev/now",
-    description: "What I'm building, learning, and open to — right now",
-    keywords: ["now page", "currently", "status", "focus", "building", "learning", "today"],
-  },
 ];
 
 export const moduleByRoute = new Map(modules.map((m) => [m.route, m]));

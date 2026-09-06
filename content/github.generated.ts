@@ -6,7 +6,7 @@
  * and content/project-stories.ts (hand-authored narrative). Regenerate with
  * `npm run sync:github`, or just `npm run build` — it runs automatically.
  *
- * Last synced: 2026-09-06T01:52:41.459Z
+ * Last synced: 2026-09-06T02:24:26.968Z
  */
 import type {
   ActivityStats,
@@ -63,7 +63,8 @@ export const githubProjects: Project[] = [
     ],
     "screenshots": [],
     "links": {
-      "github": "https://github.com/raahul4559/Portfolio"
+      "github": "https://github.com/raahul4559/Portfolio",
+      "live": "https://portfolio-smoky-xi-71.vercel.app/"
     },
     "retro": "The split-pane view earns its keep on a wide monitor and almost nowhere else. If I rebuilt it, I'd ship the terminal first and let it drive more of the navigation.",
     "github": {
@@ -72,7 +73,7 @@ export const githubProjects: Project[] = [
       "watchers": 0,
       "openIssues": 0,
       "createdAt": "2026-09-04T12:42:17Z",
-      "updatedAt": "2026-09-05T07:41:55Z",
+      "updatedAt": "2026-09-06T02:20:23Z",
       "topics": [],
       "defaultBranch": "main",
       "isFork": false,
@@ -86,6 +87,24 @@ export const githubProjects: Project[] = [
         "web"
       ],
       "commits": [
+        {
+          "sha": "078f6ef",
+          "message": "feat: update stack content with refined language skills and project contributions",
+          "date": "2026-09-06T02:19:59Z",
+          "url": "https://github.com/raahul4559/Portfolio/commit/078f6ef36c9fd5c07683392245a648e57e5fdd1d"
+        },
+        {
+          "sha": "49336cc",
+          "message": "feat: add support for contribution projects with fetching and displaying commit data",
+          "date": "2026-09-06T01:55:02Z",
+          "url": "https://github.com/raahul4559/Portfolio/commit/49336ccf45e1b1a2373ebc10d3d44788506cf777"
+        },
+        {
+          "sha": "9e35dcf",
+          "message": "feat: add activity module with contribution stats and recent activity",
+          "date": "2026-09-06T01:44:45Z",
+          "url": "https://github.com/raahul4559/Portfolio/commit/9e35dcff0c62dd2dc861ce483b079b8b0fb79b5c"
+        },
         {
           "sha": "7837dd0",
           "message": "feat: add example environment configuration for GitHub integration",
@@ -139,24 +158,6 @@ export const githubProjects: Project[] = [
           "message": "feat: rename stack.md to skills.md and update references in StackModule and modules",
           "date": "2026-09-04T18:05:21Z",
           "url": "https://github.com/raahul4559/Portfolio/commit/bd733b9838460eca8f3235c3f6aa214995badf44"
-        },
-        {
-          "sha": "0957eb5",
-          "message": "feat: add global error handling component and explorer functionality",
-          "date": "2026-09-04T17:43:41Z",
-          "url": "https://github.com/raahul4559/Portfolio/commit/0957eb5f29a1a8f992532a96cab11c9042fdcc23"
-        },
-        {
-          "sha": "edb27b7",
-          "message": "feat: update metadata titles and improve shell user display; refactor command aliases and help commands",
-          "date": "2026-09-04T17:10:22Z",
-          "url": "https://github.com/raahul4559/Portfolio/commit/edb27b7e502ca5110f39187215ee5ca664f4716a"
-        },
-        {
-          "sha": "ee4a9ce",
-          "message": "refactor: update project data structure and improve project display",
-          "date": "2026-09-04T16:52:01Z",
-          "url": "https://github.com/raahul4559/Portfolio/commit/ee4a9ce3112d85dda3ddf6f79a322f342f195ace"
         }
       ]
     }
@@ -1224,7 +1225,7 @@ export const githubProfile: GitHubProfile = {
 
 export const activityStats: ActivityStats | null = {
   "year": 2026,
-  "totalCommits": 115,
+  "totalCommits": 118,
   "totalPRs": 1,
   "totalIssues": 0,
   "totalReviews": 0,
@@ -1234,7 +1235,7 @@ export const activityStats: ActivityStats | null = {
 export const contributionYears: ContributionYear[] = [
   {
     "year": 2026,
-    "total": 122,
+    "total": 125,
     "days": [
       {
         "date": "2026-01-01",
@@ -2478,7 +2479,7 @@ export const contributionYears: ContributionYear[] = [
       },
       {
         "date": "2026-09-06",
-        "count": 0,
+        "count": 3,
         "weekday": 0
       },
       {

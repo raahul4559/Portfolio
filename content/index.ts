@@ -1,6 +1,5 @@
 import { contributionYears, githubProjects, recentActivity, streaks } from "./github.generated";
 import { modules } from "./modules";
-import { now } from "./now";
 import { profile } from "./profile";
 import { stack, stackItemCount } from "./stack";
 import { timeline } from "./timeline";
@@ -8,7 +7,6 @@ import type { IndexEntry, Project, VDir, VNode } from "./types";
 
 export * from "./types";
 export { modules, moduleByRoute, moduleById } from "./modules";
-export { now } from "./now";
 export { profile } from "./profile";
 export { stack, stackItemCount } from "./stack";
 export { timeline } from "./timeline";
@@ -160,26 +158,6 @@ export const filesystem: VDir = {
       kind: "resume",
       route: profile.resume,
       size: 84_213,
-    },
-    {
-      type: "dir",
-      name: "dev",
-      children: [
-        {
-          type: "file",
-          name: "now",
-          kind: "now",
-          route: "/dev/now",
-          size: weigh(
-            now.note,
-            now.focus.map((f) => f.value),
-            now.preferences,
-            now.principles,
-            now.favoriteTech.map((f) => f.note),
-            now.experiments.map((e) => e.note),
-          ),
-        },
-      ],
     },
   ],
 };
