@@ -9,8 +9,8 @@ export const profile: Profile = {
   host: "rahul.os",
   version: "1.0.0",
 
-  name: "Rahul Gupta",
-  role: "Full-stack engineer",
+  name: "Rahul K. Gupta",
+  role: "Full-stack Developer[Backend]",
 
   // One sentence. Specific beats broad — name the domain and the outcome.
   positioning:

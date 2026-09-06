@@ -15,13 +15,12 @@ export const stack: StackGroup[] = [
   {
     id: "languages",
     label: "Languages",
-    blurb: "What I think in.",
+    blurb: "What I think in — ranked by what's actually in the repos, not by feel.",
     items: [
-      { name: "TypeScript", level: 5, years: "4y", note: "Daily driver. Strict mode, no `any` in review." },
-      { name: "SQL", level: 4, years: "4y", note: "Comfortable reading a query plan before rewriting the query." },
-      { name: "Rust", level: 3, years: "2y", note: "Two shipped CLIs. Still slow at lifetimes." },
-      { name: "Python", level: 3, years: "3y", note: "Services and data work; not my first reach for product code." },
-      { name: "Go", level: 2, years: "1y", note: "One internal service. Liked it more than expected." },
+      { name: "JavaScript", level: 5, years: "2y", note: "Primary language across 11 of 14 real repos — REST APIs, Express backends, and vanilla frontend work." },
+      { name: "Python", level: 3, years: "2y", note: "Backend services plus one computer-vision project (MediaPipe, Keras) — six repos." },
+      { name: "TypeScript", level: 3, years: "1y", note: "This portfolio and two open-source contributions (EasyGo, MedConsul) — recent, and the direction I'm moving in." },
+      { name: "SQL", level: 3, years: "2y", note: "PostgreSQL across three real projects, two of them open-source contributions." },
     ],
   },
   {
@@ -29,11 +28,11 @@ export const stack: StackGroup[] = [
     label: "Frontend",
     blurb: "Interfaces that behave the way they look like they should.",
     items: [
-      { name: "React", level: 5, years: "4y", note: "Server components in production since they were awkward." },
-      { name: "Next.js", level: 5, years: "4y", note: "App Router; four production deployments." },
-      { name: "Tailwind CSS", level: 4, years: "3y", note: "With a token layer underneath — utilities are not a design system." },
-      { name: "Accessibility", level: 4, years: "3y", note: "Keyboard-first, tested with VoiceOver rather than assumed." },
-      { name: "Motion / interaction", level: 3, years: "2y", note: "Prefer a strict motion budget to a library of easings." },
+      { name: "React", level: 3, years: "2y", note: "Three repos, two of them open-source contributions to EasyGo and MedConsul." },
+      { name: "Next.js", level: 3, years: "1y", note: "This portfolio and one contribution (EasyGo) — App Router, real Vercel deployments." },
+      { name: "Tailwind CSS", level: 3, years: "1y", note: "This site's whole design system — a token layer underneath, not just utility classes." },
+      { name: "Accessibility", level: 4, years: "1y", note: "Keyboard-first nav with roving focus, skip links, and live regions — built into this site's explorer and activity heatmap, not assumed." },
+      { name: "Motion / interaction", level: 3, years: "1y", note: "A strict 120–220ms motion budget on this site, gated entirely behind prefers-reduced-motion." },
     ],
   },
   {
@@ -41,11 +40,10 @@ export const stack: StackGroup[] = [
     label: "Backend",
     blurb: "The parts nobody sees until they break.",
     items: [
-      { name: "Node.js", level: 5, years: "4y", note: "Streams, backpressure, and why the event loop stalled." },
-      { name: "PostgreSQL", level: 4, years: "4y", note: "Indexing, isolation levels, and one very educational deadlock." },
-      { name: "Redis", level: 4, years: "3y", note: "Pub/sub fan-out, rate limits, and cache invalidation done carefully." },
-      { name: "API design", level: 4, years: "4y", note: "Boring, versioned, and hard to misuse." },
-      { name: "Kafka", level: 2, years: "1y", note: "Consumed from it in anger; have not operated a cluster." },
+      { name: "Node.js", level: 4, years: "2y", note: "Express APIs across five repos, two of them open-source contributions." },
+      { name: "MongoDB", level: 3, years: "1y", note: "Four shipped repos — an e-commerce backend, a URL shortener, a consultancy site, and one contribution." },
+      { name: "PostgreSQL", level: 3, years: "2y", note: "Three real projects, two of them open-source contributions — schema and queries, not deep ops yet." },
+      { name: "API design", level: 3, years: "2y", note: "REST APIs across Express and FastAPI backends, six-plus repos between them." },
     ],
   },
   {
@@ -53,11 +51,8 @@ export const stack: StackGroup[] = [
     label: "Infrastructure",
     blurb: "Enough to be dangerous, and to know when to stop.",
     items: [
-      { name: "Docker", level: 4, years: "4y", note: "Multi-stage builds; images measured in tens of MB." },
-      { name: "CI/CD", level: 4, years: "4y", note: "GitHub Actions. If it is not in CI it does not exist." },
-      { name: "Vercel / edge", level: 4, years: "3y", note: "Caching semantics, ISR, and streaming responses." },
-      { name: "Terraform", level: 2, years: "1y", note: "Can extend a module. Would not architect the estate." },
-      { name: "Kubernetes", level: 2, years: "2y", note: "Deploy and debug, not design. Honest about the gap." },
+      { name: "Docker", level: 2, years: "2y", note: "Dockerfiles in two repos, one a contribution — containerized, not yet orchestrated." },
+      { name: "Vercel / edge", level: 3, years: "1y", note: "Two live deployments — this portfolio and a client site, both synced and built automatically." },
     ],
   },
   {
